@@ -3,7 +3,7 @@ Table table;
 
 void setup() {
    
-  size(1600, 624);
+  size(1276, 609);
   floorPlan = loadImage("data/floor.png");
   table = loadTable("people.csv", "header");
   
@@ -18,6 +18,7 @@ void draw() {
       String date = row.getString("Date");
       String day = date.substring(0,2);
       String month = date.substring(3,5);
+      print(people);
       
     }
   
