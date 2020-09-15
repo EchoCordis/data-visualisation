@@ -15,14 +15,7 @@ void draw() {
    
     background(floorPlan);
     
-    //for (TableRow row : table.rows()) {
-    //  int people = row.getInt("People");
-    //  String date = row.getString("Date");
-    //  String day = date.substring(0,2);
-    //  String month = date.substring(3,5);
-    //  print(people);
-      
-    //}
+
   
     while (row < table.getRowCount()) {
       int people = table.getInt(row, 1);
