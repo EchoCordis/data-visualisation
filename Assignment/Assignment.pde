@@ -1,22 +1,59 @@
-PImage floorPlan;
-Table table;
+import controlP5.*;
+//This imported library is ued to create on screen GUIs such as the slider.
 
+ControlP5 cp5;
+PImage floorPlanbg;
+//PImage imgMask;
+Table table;
+PShape s;
+float positionX;
+float positionY;
+float positionZ;
 int row = 0;
 
 void setup() {
-   
+  frameRate(240);
   size(1600, 1122);
-  floorPlan = loadImage("data/floor.png");
+
+  floorPlanbg = loadImage("data/floor.png");
+  //imgMask = loadImage("mask.jpg");
+  //floorPlanbg.mask(imgMask);
   table = loadTable("people.csv", "header");
-  
+  background(floorPlanbg);
+  //We need to add a white background to the image.
+  //Currently we are using PNG with an alphamask so we can't set the background to any other colour other than the image.
+
+  //Creates the same shape of the floor plan. This will contain all of the plotted data points.
+  s = createShape();
+  s.beginShape();
+  s.vertex(217,362);
+  s.vertex(950,395);
+  s.vertex(1052,394);
+  s.vertex(1357,267);
+  s.vertex(1484,561);
+  s.vertex(1481,821);
+  s.vertex(948,827);
+  s.vertex(633,832);
+  s.vertex(621,799);
+  s.vertex(282,801);
+  s.vertex(175,737);
+  s.vertex(92,439);
+  s.vertex(120,406);
+  s.vertex(214,402);
+  s.noFill();
+  s.noStroke();
+  s.endShape(CLOSE);
+  shape(s,0,0);
+}
+//Function used to check the position of your mouse cursor when pressed down.
+void mousePressed(){
+  ellipse( mouseX, mouseY, 2, 2 );
+  fill(#FF0A0A);
+  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
+  println( "x: " + mouseX + " y: " + mouseY);
 }
 
 void draw() {
-   
-    background(floorPlan);
-    
-
-  
     while (row < table.getRowCount()) {
       int people = table.getInt(row, 1);
       String[] date = table.getString(row, 0).split("-");
@@ -25,4 +62,23 @@ void draw() {
       row++;
       println(day + " " + month + " : " + people);
     }
+    
+    //We need to figure out, how to plot down randomized data within PShape/BeginShape
+    //Is this even possible? if not follow try the solution below.
+    
+    //I've added an image into the github folder which shows all the zones within the floorplan.
+    //I want the data to be generated/placed into these zones. Image:(FloorZones.png)
+    //With this done, we will hae a density points within the zone and we'll have the x and y position.
+    //The x and y positions allow use to randomise the points for which the data will be randomly plotted.
+
+    //Test. Creates random rectangles around the window screen
+    //Use these randomly generates rectangles to test the generation within the floorplan
+    strokeWeight(3);
+    color c = color(255,random(246),random(237));
+    fill(c);
+    tint(c);
+    positionX = random(width);
+    positionY = random(height);
+    rect(positionX,positionY,20,20,10);
+    
 }
