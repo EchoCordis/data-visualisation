@@ -15,7 +15,7 @@ void setup() {
   frameRate(240);
   size(1700, 1193);
 
-  floorPlanbg = loadImage("data/02RI.png");
+  floorPlanbg = loadImage("data/02RI.jpg");
   //imgMask = loadImage("mask.jpg");
   //floorPlanbg.mask(imgMask);
   table = loadTable("people.csv", "header");
