@@ -88,13 +88,13 @@ void draw() {
 
     //Test. Creates random rectangles around the window screen
     //Use these randomly generates rectangles to test the generation within the floorplan
-    strokeWeight(3);
-    color c = color(255,random(246),random(237));
-    fill(c);
-    tint(c);
-    positionX = random(width);
-    positionY = random(height);
-    rect(positionX,positionY,20,20,10);
+    //strokeWeight(3);
+    //color c = color(255,random(246),random(237));
+    //fill(c);
+    //tint(c);
+    //positionX = random(width);
+    //positionY = random(height);
+    //rect(positionX,positionY,20,20,10);
     
 }
 
