@@ -15,7 +15,7 @@ void setup() {
   frameRate(240);
   size(1600, 1122);
 
-  floorPlanbg = loadImage("data/floor.png");
+  floorPlanbg = loadImage("data/floor2");
   //imgMask = loadImage("mask.jpg");
   //floorPlanbg.mask(imgMask);
   table = loadTable("people.csv", "header");
@@ -95,7 +95,6 @@ void draw() {
     //positionX = random(width);
     //positionY = random(height);
     //rect(positionX,positionY,20,20,10);
-    
 }
 
 //Used later on to control the data using the slider
