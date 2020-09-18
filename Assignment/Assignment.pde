@@ -13,9 +13,9 @@ int row = 0;
 
 void setup() {
   frameRate(240);
-  size(1600, 1122);
+  size(1700, 1193);
 
-  floorPlanbg = loadImage("data/floor2");
+  floorPlanbg = loadImage("data/02RI.png");
   //imgMask = loadImage("mask.jpg");
   //floorPlanbg.mask(imgMask);
   table = loadTable("people.csv", "header");
