@@ -41,20 +41,10 @@ void setup() {
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
   s = createShape();
   s.beginShape();
-  s.vertex(217,362);
-  s.vertex(950,395);
-  s.vertex(1052,394);
-  s.vertex(1357,267);
-  s.vertex(1484,561);
-  s.vertex(1481,821);
-  s.vertex(948,827);
-  s.vertex(633,832);
-  s.vertex(621,799);
-  s.vertex(282,801);
-  s.vertex(175,737);
-  s.vertex(92,439);
-  s.vertex(120,406);
-  s.vertex(214,402);
+  s.vertex(220,854); //Use these dimensions to plot the data down.
+  s.vertex(210, 439);
+  s.vertex(1484,465);
+  s.vertex(1503,835);
   s.noFill();
   s.noStroke();
   s.endShape(CLOSE);
@@ -92,8 +82,8 @@ void draw() {
     //color c = color(255,random(246),random(237));
     //fill(c);
     //tint(c);
-    //positionX = random(width);
-    //positionY = random(height);
+    //positionX = random(210,1500);
+    //positionY = random(439, 854);
     //rect(positionX,positionY,20,20,10);
 }
 
