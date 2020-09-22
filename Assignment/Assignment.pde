@@ -22,6 +22,7 @@ float positionX;
 float positionY;
 float positionZ;
 int row = 0;
+int date = 0;
 
 Minim minim;
 AudioPlayer audioplayer;
@@ -89,16 +90,15 @@ void screenStart() {
   toggleSliders();
   //Initialises ControlP5 controller
   cp5 = new ControlP5(this);
-  //Adds a date slider into the screen
+  //Adds a volume slider into the screen
   Slider volumeSlider = cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
   //Makes a font to be used for the slider's labels
   ControlFont font = new ControlFont(createFont("Calibri", 20));
   //Adds a date slider into the screen
-  Slider dateSlider = cp5.addSlider("Date region")
+  Slider dateSlider = cp5.addSlider("date")
     //Max value is number of rows - 1 from the csv file (not including the headers)
     //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
     .setRange(0, 13409)  
-    .setValue(0)  //Sets initial value of the slider
     .setPosition(300, 100)  //Sets position of the slider
     .setSize(1000, 50)  //Sets slider's size
     .setSliderMode(Slider.FLEXIBLE);
@@ -196,7 +196,10 @@ void draw() {
 //Used later on to control the data using the slider
 //This method is called whenever the slider is moved (or any other UI elements if we add anymore)
 void controlEvent(ControlEvent event){
-  //int row = Math.round(cp5.getController("Date region").getValue());
-  //cp5.getController("Date region").setValueLabel(table.getString(row, 0));
-  //println("Slider moved: " + table.getString(row, 0) + " " + table.getInt(row, 1));
+  
+  if (event.getController().getName() == "date"){
+     cp5.getController("date").setValueLabel(table.getString(date, 0));
+     println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
+  }
+  
 }
