@@ -125,15 +125,13 @@ void toggleSliders() {
 
 void setup() {
   frameRate(240);
-    img = loadImage("banner.png");
-  pg = createGraphics(1600, 1122);
   size(1700, 1193);
-  
+  img = loadImage("banner.png");
+  pg = createGraphics(1600, 1122);  
    // allow audio API to be used here
   minim = new Minim(this);
   // load the audio file
   audioplayer = minim.loadFile("bgmusic.wav");
-  size(1700, 1193);
   floorPlanbg = loadImage("data/02RI.png");
   table = loadTable("people.csv", "header");
   background(floorPlanbg);
