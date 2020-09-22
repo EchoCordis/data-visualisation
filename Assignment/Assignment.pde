@@ -119,16 +119,17 @@ void toggleSliders() {
 }
 
 void setup() {
-  img = loadImage("banner.png");
   frameRate(240);
+    img = loadImage("banner.png");
+
   pg = createGraphics(1600, 1122);
   
   // allow audio API to be used here
   minim = new Minim(this);
   // load the audio file
   audioplayer = minim.loadFile("bgmusic.wav");
-  size(1600, 1122);
-  floorPlan = loadImage("data/floor.png");
+  size(1700, 1193);
+  floorPlan = loadImage("data/02RI.jpg");
   table = loadTable("people.csv", "header");
   background(floorPlan);
   f = createFont("Arial", 16, true);
@@ -196,9 +197,9 @@ void draw() {
 //Used later on to control the data using the slider
 //This method is called whenever the slider is moved (or any other UI elements if we add anymore)
 void controlEvent(ControlEvent event) {
-//  int row = Math.round(cp5.getController("").getValue());
-//  cp5.getController("").setValueLabel(table.getString(row, 0));
-//  println("Slider moved: " + table.getString(row, 0) + " " + table.getInt(row, 1));
+  int row = Math.round(cp5.getController("").getValue());
+  cp5.getController("").setValueLabel(table.getString(row, 0));
+  println("Slider moved: " + table.getString(row, 0) + " " + table.getInt(row, 1));
 }
 //int size = table.getRowCount();
 //int[] array = new int[size];
