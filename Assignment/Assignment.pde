@@ -25,7 +25,7 @@ float positionZ;
 
 Minim minim;
 AudioPlayer audioplayer;
-boolean playAudio;
+boolean playAudio = true;
 int button_x = 50;
 int button_y = 50;
 int button_sz = 30;
@@ -75,7 +75,11 @@ void toggleSliders() {
   text(contrastBG, 110, -30, 200, 100);
   text(controlVolume, 300, -30, 200, 100);
   rect(buttonX, buttonY, buttonZ, buttonZ);
-  //audioplayer.setGain(volume);
+  audioplayer.setGain(volume);
+  if(playAudio)
+    audioplayer.play();
+    else
+    audioplayer.pause();
 }
 
 void setup() {
@@ -86,7 +90,7 @@ void setup() {
   // allow audio API to be used here
   minim = new Minim(this);
   // load the audio file
-  audioplayer = minim.loadFile("bgm.mp3");
+  audioplayer = minim.loadFile("bgmusic.mp3");
   size(1600, 1122);
   floorPlan = loadImage("data/floor.png");
   table = loadTable("people.csv", "header");
@@ -136,6 +140,7 @@ void draw() {
   if (screenStart == 0) {
     //initialScreen();
     screenStart();
+    
   } else if (screenStart == 1) {
     screenStart();
   }
