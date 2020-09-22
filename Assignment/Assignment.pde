@@ -42,6 +42,22 @@ int buttonZ = 20;
 
 // This is the main introduction screen. User must click to enter the
 // simulation of the data visualisation.
+
+void setup() {
+  frameRate(240);
+  size(1700, 1193);
+  img = loadImage("banner.png");
+  floorPlanbg = loadImage("data/02RI.png");
+  table = loadTable("people.csv", "header");
+  background(floorPlanbg);
+  pg = createGraphics(1600, 1122);  
+   // allow audio API to be used here
+  minim = new Minim(this);
+  // load the audio file
+  audioplayer = minim.loadFile("bgmusic.wav");
+  f = createFont("Arial", 16, true);
+}
+
 void initialScreen() {
   // white background and text align center
 
@@ -123,26 +139,11 @@ void toggleSliders() {
   }
 }
 
-void setup() {
-  frameRate(240);
-  size(1700, 1193);
-  img = loadImage("banner.png");
-  pg = createGraphics(1600, 1122);  
-   // allow audio API to be used here
-  minim = new Minim(this);
-  // load the audio file
-  audioplayer = minim.loadFile("bgmusic.wav");
-  floorPlanbg = loadImage("data/02RI.png");
-  table = loadTable("people.csv", "header");
-  background(floorPlanbg);
-  f = createFont("Arial", 16, true);
-}
-
 //Function used to check the position of your mouse cursor when pressed down.
 void mousePressed() {
-  //ellipse( mouseX, mouseY, 2, 2 );
-  //fill(#FF0A0A);
-  //text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
+  ellipse( mouseX, mouseY, 2, 2 );
+  fill(#FF0A0A);
+  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
   //println( "x: " + mouseX + " y: " + mouseY);]
   if( mouseX > buttonX && mouseX < buttonX + buttonZ && mouseY > buttonY && mouseY < buttonY + buttonZ){
     playAudio = !playAudio; // will toggle pause/play music etc
@@ -153,6 +154,11 @@ void mousePressed() {
 }
 
 void draw() {
+  //strokeWeight(3);
+  //positionX = random(220,1500);
+  //positionY = random(439, 854);
+  //rect(positionX,positionY,20,20,10);
+  
   // check if we are in the main menu screen or the visualisation screen.
   if (screenStart == 0) {
     initialScreen();
@@ -170,15 +176,16 @@ void draw() {
     row++;
     println(day + " " + month + " : " + people);
     
-    // get the amount of people for a specific day and loop through
+    
+     //get the amount of people for a specific day and loop through
     for (int i = 0; i <= people; i++) {
       fill(0);
       stroke(255,0,0);
       noSmooth();
       strokeWeight(5);
       //get a random x and y coordinate from the map
-      float xCord = random(210,1500);
-      float yCord = random(439, 854);
+      float xCord = random(220,1500);
+      float yCord = random(439, 850);
       // plot a point on the map with the x and y coordinate.
       point(xCord, yCord);
       //pg.clear();
