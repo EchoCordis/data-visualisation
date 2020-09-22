@@ -1,12 +1,7 @@
 import controlP5.*;
 //This imported library is ued to create on screen GUIs such as the slider.
 //Minim is an audio library that uses the JavaSound API
-import ddf.minim.spi.*;
-import ddf.minim.ugens.*;
 import ddf.minim.*;
-import ddf.minim.analysis.*;
-import ddf.minim.effects.*;
-import ddf.minim.signals.*;
 
 //UI Elements
 ControlP5 cp5;
