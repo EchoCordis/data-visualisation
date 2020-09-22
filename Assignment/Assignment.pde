@@ -71,7 +71,7 @@ void screenStart() {
   background(floorPlan);
   toggleSliders();
   cp5 = new ControlP5(this);
-  Slider volumeSlider = cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
+  Slider volumeSlider = cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50); //the volumeSlider? It's not even being used.
   //UI
   //Makes a font to be used for the slider's labels
   ControlFont font = new ControlFont(createFont("Calibri", 20));
@@ -197,9 +197,9 @@ void draw() {
 //Used later on to control the data using the slider
 //This method is called whenever the slider is moved (or any other UI elements if we add anymore)
 void controlEvent(ControlEvent event) {
-  int row = Math.round(cp5.getController("Date region").getValue());
-  cp5.getController("Date region").setValueLabel(table.getString(row, 0));
-  println("Slider moved: " + table.getString(row, 0) + " " + table.getInt(row, 1));
+  //int row = Math.round(cp5.getController("Date region").getValue());
+  //cp5.getController("Date region").setValueLabel(table.getString(row, 0));
+  //println("Slider moved: " + table.getString(row, 0) + " " + table.getInt(row, 1));
 }
 //int size = table.getRowCount();
 //int[] array = new int[size];
