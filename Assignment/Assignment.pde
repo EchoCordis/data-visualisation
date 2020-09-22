@@ -129,7 +129,7 @@ void setup() {
   // load the audio file
   audioplayer = minim.loadFile("bgmusic.wav");
   size(1700, 1193);
-  floorPlan = loadImage("data/02RI.jpg");
+  floorPlan = loadImage("data/02RI.png");
   table = loadTable("people.csv", "header");
   background(floorPlan);
   f = createFont("Arial", 16, true);
