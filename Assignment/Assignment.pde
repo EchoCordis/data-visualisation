@@ -181,8 +181,8 @@ void draw() {
        noSmooth();
        strokeWeight(5);
        //get a random x and y coordinate from the map
-       float xCord = random(170,1430);
-       float yCord = random(342,790);
+       float xCord = random(220,1500);
+       float yCord = random(439,850);
        // plot a point on the map with the x and y coordinate.
        point(xCord, yCord);
        //pg.clear();
