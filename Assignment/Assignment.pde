@@ -8,7 +8,13 @@ import ddf.minim.analysis.*;
 import ddf.minim.effects.*;
 import ddf.minim.signals.*;
 
+//UI Elements
 ControlP5 cp5;
+Slider volumeSlider;
+Slider dateSlider;
+Button startButton;
+Toggle volumeToggle;
+
 PImage floorPlanbg;
 PImage img;
 //PImage imgMask;
@@ -41,6 +47,8 @@ int buttonX = 40;
 int buttonY = 40;
 int buttonZ = 20;
 
+boolean currentScreen;
+
 // This is the main introduction screen. User must click to enter the
 // simulation of the data visualisation.
 
@@ -57,6 +65,64 @@ void setup() {
   // load the audio file
   audioplayer = minim.loadFile("bgmusic.wav");
   f = createFont("Arial", 16, true);
+  currentScreen = false;
+  
+  //Initialises ControlP5 controller
+  cp5 = new ControlP5(this);
+  initialiseUI();
+}
+
+//Initialises the different UI elements in the program
+void initialiseUI() {
+  //Makes a font to be used for the slider's labels
+  ControlFont font = new ControlFont(createFont("Calibri", 20));
+  
+  //Adds a volume slider into the main screen
+  volumeSlider = cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
+    
+  //Adds a date slider into the main screen
+  dateSlider = cp5.addSlider("date")
+              //Max value is number of rows - 1 from the csv file (not including the headers)
+              //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
+              .setRange(0, 13409)  
+              .setPosition(300, 100)  //Sets position of the slider
+              .setSize(1000, 50)  //Sets slider's size
+              .setSliderMode(Slider.FLEXIBLE);
+  dateSlider.getValueLabel().setFont(font);
+  
+  //Adds a start button to the start screen
+  startButton = cp5.addButton("start")
+                .setPosition(800, 750)
+                .setSize(105,32)
+                .activateBy(ControlP5.PRESS)
+                .setValue(0);
+  startButton.getCaptionLabel().setFont(font);
+  
+  //Adds a volume toggle to the main screen
+  volumeToggle = cp5.addToggle("");
+  
+  //Hides the sliders and volume toggle to start with
+  volumeSlider.hide();
+  dateSlider.hide();
+  volumeToggle.hide();
+}
+
+//Toggles the screen between the start screen and the main screen
+void toggleScreen() {
+  if (currentScreen) {
+    screenStart();
+  }
+  else if (!currentScreen) {
+    initialScreen();
+  }
+}
+
+//Hides the start button and shows the other UI elements
+void toggleUI() {
+  volumeSlider.show();
+  dateSlider.show();
+  volumeToggle.show();
+  startButton.hide();
 }
 
 void initialScreen() {
@@ -70,11 +136,11 @@ void initialScreen() {
   text(introBox, 800, 600);
   text(introBox2, 830, 620);
 
-  textSize(16);
-  fill(0);
-  rect(705, 457, 105, 32);
-  fill(255);
-  text("Click to Start", 757, 470);
+  //textSize(16);
+  //fill(0);
+  //rect(705, 457, 105, 32);
+  //fill(255);
+  //text("Click to Start", 757, 470);
 }
 
 void startDataVisualiser() {
@@ -88,21 +154,6 @@ void startDataVisualiser() {
 void screenStart() {
   background(floorPlanbg);
   toggleSliders();
-  //Initialises ControlP5 controller
-  cp5 = new ControlP5(this);
-  //Adds a volume slider into the screen
-  Slider volumeSlider = cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
-  //Makes a font to be used for the slider's labels
-  ControlFont font = new ControlFont(createFont("Calibri", 20));
-  //Adds a date slider into the screen
-  Slider dateSlider = cp5.addSlider("date")
-    //Max value is number of rows - 1 from the csv file (not including the headers)
-    //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
-    .setRange(0, 13409)  
-    .setPosition(300, 100)  //Sets position of the slider
-    .setSize(1000, 50)  //Sets slider's size
-    .setSliderMode(Slider.FLEXIBLE);
-  dateSlider.getValueLabel().setFont(font);
 
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
   //Try to use the Coordiantes below
@@ -160,12 +211,14 @@ void draw() {
   //rect(positionX,positionY,20,20,10);
   
   // check if we are in the main menu screen or the visualisation screen.
-  if (screenStart == 0) {
-    initialScreen();
-    //screenStart();
-  } else if (screenStart == 1) {
-    screenStart();
-  }
+  //if (screenStart == 0) {
+  //  initialScreen();
+  //  //screenStart();
+  //} else if (screenStart == 1) {
+  //  screenStart();
+  //}
+  
+  toggleScreen();
 
   // loop through the csv file and save to variables.
   while (row < table.getRowCount()) {
@@ -193,13 +246,15 @@ void draw() {
   }
 }
 
-//Used later on to control the data using the slider
-//This method is called whenever the slider is moved (or any other UI elements if we add anymore)
+//Event controller for the UI
 void controlEvent(ControlEvent event){
   
   if (event.getController().getName() == "date"){
      cp5.getController("date").setValueLabel(table.getString(date, 0));
      println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
   }
-  
+  if (event.getController().getName() == "start"){
+    toggleUI();
+    currentScreen = true;
+  }
 }
