@@ -78,6 +78,7 @@ void initialiseUI() {
   
   //Adds a volume slider into the main screen
   volumeSlider = cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
+  volumeSlider.getValueLabel().setFont(font);
     
   //Adds a date slider into the main screen
   dateSlider = cp5.addSlider("date")
@@ -100,8 +101,8 @@ void initialiseUI() {
   //Adds a volume toggle to the main screen
   volumeToggle = cp5.addToggle("mute")
                   .setValue(true)
-                  .setPosition(40,40)
-                  .setSize(20,20);
+                  .setPosition(60,40)
+                  .setSize(40,40);
   
   //Hides the sliders and volume toggle to begin with
   volumeSlider.hide();
@@ -171,9 +172,9 @@ void toggleSliders() {
   //background(slider);
   //fill(0, 76, 255);
   textSize(17);
-  text(toggleMusic, 7, 100);
-  text("Change Volume",154,60);
-  text("Change Region",154,130);
+  text(toggleMusic, 100, 100);
+  text("Change Volume",1450,55);
+  text("Change Date Region",1450,125);
 
   //text(controlVolume, 300, -30, 200, 100);
   //rect(buttonX, buttonY, buttonZ, buttonZ);
