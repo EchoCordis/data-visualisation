@@ -8,7 +8,7 @@ import ddf.minim.analysis.*;
 import ddf.minim.effects.*;
 import ddf.minim.signals.*;
 
-
+PImage img;
 PImage floorPlan;
 Table table;
 PFont f;
@@ -46,6 +46,7 @@ void initialScreen() {
   // white background and text align center
 
   background(255);
+  image(img,0,0);
   textAlign(CENTER, CENTER);
   fill(0);
   textSize(24);
@@ -118,7 +119,7 @@ void toggleSliders() {
 }
 
 void setup() {
-  
+  img = loadImage("banner.png");
   frameRate(240);
   pg = createGraphics(1600, 1122);
   
@@ -195,9 +196,9 @@ void draw() {
 //Used later on to control the data using the slider
 //This method is called whenever the slider is moved (or any other UI elements if we add anymore)
 void controlEvent(ControlEvent event) {
-  //int row = Math.round(cp5.getController("").getValue());
-  //cp5.getController("").setValueLabel(table.getString(row, 0));
-  //println("Slider moved: " + table.getString(row, 0) + " " + table.getInt(row, 1));
+//  int row = Math.round(cp5.getController("").getValue());
+//  cp5.getController("").setValueLabel(table.getString(row, 0));
+//  println("Slider moved: " + table.getString(row, 0) + " " + table.getInt(row, 1));
 }
 //int size = table.getRowCount();
 //int[] array = new int[size];
