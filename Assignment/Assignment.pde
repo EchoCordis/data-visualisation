@@ -14,6 +14,7 @@ Slider volumeSlider;
 Slider dateSlider;
 Button startButton;
 Toggle volumeToggle;
+int date = 0;  //Used for the slider's label
 
 PImage floorPlanbg;
 PImage img;
@@ -28,17 +29,16 @@ float positionX;
 float positionY;
 float positionZ;
 int row = 0;
-int date = 0;
 
 Minim minim;
 AudioPlayer audioplayer;
-boolean playAudio = true;
+boolean playAudio;
 int button_x = 50;
 int button_y = 50;
 int button_sz = 30;
 PGraphics pg;
 String toggleMusic = "Audio On/Off";
-int screenStart = 0;
+//int screenStart = 0;
 String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
 String introBox = "Welcome to the Building 11 people counter data visualiser!";
@@ -47,6 +47,7 @@ int buttonX = 40;
 int buttonY = 40;
 int buttonZ = 20;
 
+//Checks which is current screen - false = start screen, true = main screen
 boolean currentScreen;
 
 // This is the main introduction screen. User must click to enter the
@@ -69,7 +70,10 @@ void setup() {
   
   //Initialises ControlP5 controller
   cp5 = new ControlP5(this);
+  //Initialises the UI elements
   initialiseUI();
+  
+  playAudio = true;
 }
 
 //Initialises the different UI elements in the program
@@ -92,22 +96,25 @@ void initialiseUI() {
   
   //Adds a start button to the start screen
   startButton = cp5.addButton("start")
-                .setPosition(800, 750)
-                .setSize(105,32)
+                .setPosition(750, 700)
+                .setSize(200,50)
                 .activateBy(ControlP5.PRESS)
                 .setValue(0);
   startButton.getCaptionLabel().setFont(font);
   
   //Adds a volume toggle to the main screen
-  volumeToggle = cp5.addToggle("");
+  volumeToggle = cp5.addToggle("mute")
+                  .setValue(true)
+                  .setPosition(40,40)
+                  .setSize(20,20);
   
-  //Hides the sliders and volume toggle to start with
+  //Hides the sliders and volume toggle to begin with
   volumeSlider.hide();
   dateSlider.hide();
   volumeToggle.hide();
 }
 
-//Toggles the screen between the start screen and the main screen
+//Toggles the screen between the start screen and the main visualisation screen
 void toggleScreen() {
   if (currentScreen) {
     screenStart();
@@ -135,17 +142,11 @@ void initialScreen() {
   textSize(24);
   text(introBox, 800, 600);
   text(introBox2, 830, 620);
-
-  //textSize(16);
-  //fill(0);
-  //rect(705, 457, 105, 32);
-  //fill(255);
-  //text("Click to Start", 757, 470);
 }
 
-void startDataVisualiser() {
-  screenStart = 1;
-}
+//void startDataVisualiser() {
+//  screenStart = 1;
+//}
 
 //This is the main screen where the data is visualised.
 //Introduce sliders to control the volumne and possible another slider to control
@@ -180,14 +181,9 @@ void toggleSliders() {
   text("Change Region",154,130);
 
   //text(controlVolume, 300, -30, 200, 100);
-  rect(buttonX, buttonY, buttonZ, buttonZ);
+  //rect(buttonX, buttonY, buttonZ, buttonZ);
   audioplayer.setGain(volume);
-  if(playAudio){
-    audioplayer.play();
-  }
-  else{
-    audioplayer.pause();
-  }
+  
 }
 
 //Function used to check the position of your mouse cursor when pressed down.
@@ -196,12 +192,10 @@ void mousePressed() {
   fill(#FF0A0A);
   text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
   //println( "x: " + mouseX + " y: " + mouseY);]
-  if( mouseX > buttonX && mouseX < buttonX + buttonZ && mouseY > buttonY && mouseY < buttonY + buttonZ){
-    playAudio = !playAudio; // will toggle pause/play music etc
-  }
-  if (screenStart == 0) {
-    startDataVisualiser();
-  }
+
+  //if (screenStart == 0) {
+  //  startDataVisualiser();
+  //}
 }
 
 void draw() {
@@ -210,14 +204,7 @@ void draw() {
   //positionY = random(439, 854);
   //rect(positionX,positionY,20,20,10);
   
-  // check if we are in the main menu screen or the visualisation screen.
-  //if (screenStart == 0) {
-  //  initialScreen();
-  //  //screenStart();
-  //} else if (screenStart == 1) {
-  //  screenStart();
-  //}
-  
+  //Checks if we are in the title screen or the main visualisation screen.
   toggleScreen();
 
   // loop through the csv file and save to variables.
@@ -248,13 +235,29 @@ void draw() {
 
 //Event controller for the UI
 void controlEvent(ControlEvent event){
-  
-  if (event.getController().getName() == "date"){
-     cp5.getController("date").setValueLabel(table.getString(date, 0));
-     println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
-  }
-  if (event.getController().getName() == "start"){
-    toggleUI();
-    currentScreen = true;
+  if (event.isController()) {
+    if (event.getController().getName() == "date"){
+       cp5.getController("date").setValueLabel(table.getString(date, 0));
+       println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
+    }
+    //Disables the title screen and enables the main visualisation screen
+    //Also starts playing the background music
+    if (event.getController().getName() == "start"){
+      toggleUI();
+      currentScreen = true;
+      audioplayer.play();
+      playAudio = !playAudio;
+    }
+    //Mutes/Unmutes the audio
+    if (event.getController().getName() == "mute"){
+      if(playAudio){
+        audioplayer.play();
+        playAudio = !playAudio;
+      }
+      else {
+        audioplayer.pause();
+        playAudio = !playAudio;
+      }
+    }
   }
 }
