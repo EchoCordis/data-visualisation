@@ -71,21 +71,21 @@ void screenStart() {
   background(floorPlan);
   toggleSliders();
   cp5 = new ControlP5(this);
-  cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
+  Slider volumeSlider = cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
   //UI
   //Makes a font to be used for the slider's labels
   ControlFont font = new ControlFont(createFont("Calibri", 20));
   cp5 = new ControlP5(this);  //Initialises ControlP5 controller
   //Adds a slider into the screen
-  cp5.addSlider("Date region")
+  Slider dateSlider = cp5.addSlider("Date region")
     //Max value is number of rows - 1 from the csv file (not including the headers)
     //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
     .setRange(0, 13409)  
     .setValue(0)  //Sets initial value of the slider
     .setPosition(300, 100)  //Sets position of the slider
     .setSize(1000, 50)  //Sets slider's size
-    .setSliderMode(Slider.FLEXIBLE)
-    .getValueLabel().setFont(font);
+    .setSliderMode(Slider.FLEXIBLE);
+  dateSlider.getValueLabel().setFont(font);
 
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
   s = createShape();
@@ -197,8 +197,8 @@ void draw() {
 //Used later on to control the data using the slider
 //This method is called whenever the slider is moved (or any other UI elements if we add anymore)
 void controlEvent(ControlEvent event) {
-  int row = Math.round(cp5.getController("").getValue());
-  cp5.getController("").setValueLabel(table.getString(row, 0));
+  int row = Math.round(cp5.getController("Date region").getValue());
+  cp5.getController("Date region").setValueLabel(table.getString(row, 0));
   println("Slider moved: " + table.getString(row, 0) + " " + table.getInt(row, 1));
 }
 //int size = table.getRowCount();
