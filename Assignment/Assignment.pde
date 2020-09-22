@@ -35,7 +35,7 @@ int screenStart = 0;
 String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
 String introBox = "Welcome to the Building 11 people counter data visualiser!";
-String introBox2 = "In this application, we will simulate the entry of people into building 11, based on various sensory data";
+String introBox2 = "In this application, we will simulate the entry of people into building 11, based on sensory data.";
 int buttonX = 40;
 int buttonY = 40;
 int buttonZ = 20;
@@ -43,35 +43,72 @@ int buttonZ = 20;
 // This is the main introduction screen. User must click to enter the
 // simulation of the data visualisation.
 void initialScreen() {
-
   // white background and text align center
+
   background(255);
   textAlign(CENTER, CENTER);
   fill(0);
+  textSize(24);
   text(introBox, 800, 600);
   text(introBox2, 830, 620);
 
+  textSize(16);
   fill(0);
-  rect(445, 340, 105, 32);
+  rect(705, 457, 105, 32);
   fill(255);
-  text("Click to Start", 500, 350);
+  text("Click to Start", 757, 470);
+}
+
+void startDataVisualiser() {
+  screenStart = 1;
 }
 
 //This is the main screen where the data is visualised.
 //Introduce sliders to control the volumne and possible another slider to control
 //background contrast
 void screenStart() {
+  background(floorPlan);
   toggleSliders();
   cp5 = new ControlP5(this);
   cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
+  //UI
+  //Makes a font to be used for the slider's labels
+  ControlFont font = new ControlFont(createFont("Calibri", 20));
+  cp5 = new ControlP5(this);  //Initialises ControlP5 controller
+  //Adds a slider into the screen
+  cp5.addSlider("Date region")
+    //Max value is number of rows - 1 from the csv file (not including the headers)
+    //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
+    .setRange(0, 13409)  
+    .setValue(0)  //Sets initial value of the slider
+    .setPosition(300, 100)  //Sets position of the slider
+    .setSize(1000, 50)  //Sets slider's size
+    .setSliderMode(Slider.FLEXIBLE)
+    .getValueLabel().setFont(font);
+
+  //Creates the same shape of the floor plan. This will contain all of the plotted data points.
+  s = createShape();
+  s.beginShape();
+  s.vertex(220, 854); //Use these dimensions to plot the data down.
+  s.vertex(210, 439);
+  s.vertex(1484, 465);
+  s.vertex(1503, 835);
+  s.noFill();
+  s.noStroke();
+  s.endShape(CLOSE);
+  shape(s, 0, 0);
 }
 
 
 void toggleSliders() {
   //background(slider);
-  fill(0, 76, 255);
-  text(toggleMusic, 7, -30, 100, 100);
-  text(controlVolume, 300, -30, 200, 100);
+  //fill(0, 76, 255);
+  textSize(17);
+  text(toggleMusic, 7, 100);
+  text("Change Volume",154,60);
+  text("Change Region",154,130);
+
+  //text(controlVolume, 300, -30, 200, 100);
   rect(buttonX, buttonY, buttonZ, buttonZ);
   audioplayer.setGain(volume);
   if(playAudio)
@@ -95,43 +132,22 @@ void setup() {
   background(floorPlan);
   f = createFont("Arial", 16, true);
 
-  //UI
-  //Makes a font to be used for the slider's labels
-  ControlFont font = new ControlFont(createFont("Calibri", 20));
-  cp5 = new ControlP5(this);  //Initialises ControlP5 controller
-  //Adds a slider into the screen
-  cp5.addSlider("")
-    //Max value is number of rows - 1 from the csv file (not including the headers)
-    //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
-    .setRange(0, 13409)  
-    .setValue(0)  //Sets initial value of the slider
-    .setPosition(300, 100)  //Sets position of the slider
-    .setSize(1000, 50)  //Sets slider's size
-    .setSliderMode(Slider.FLEXIBLE)
-    .getValueLabel().setFont(font);
 
-  //Creates the same shape of the floor plan. This will contain all of the plotted data points.
-  s = createShape();
-  s.beginShape();
-  s.vertex(220, 854); //Use these dimensions to plot the data down.
-  s.vertex(210, 439);
-  s.vertex(1484, 465);
-  s.vertex(1503, 835);
-  s.noFill();
-  s.noStroke();
-  s.endShape(CLOSE);
-  shape(s, 0, 0);
 }
 
 //Function used to check the position of your mouse cursor when pressed down.
 void mousePressed() {
   //ellipse( mouseX, mouseY, 2, 2 );
-  //fill(#FF0A0A);
-  //text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
+  fill(#FF0A0A);
+  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
   //println( "x: " + mouseX + " y: " + mouseY);]
      if( mouseX > buttonX && mouseX < buttonX + buttonZ &&
       mouseY > buttonY && mouseY < buttonY + buttonZ){
   playAudio = !playAudio; // will toggle pause/play music etc
+      }
+      
+      if (screenStart == 0) {
+        startDataVisualiser();
       }
 }
 
@@ -140,8 +156,8 @@ void draw() {
 
   // check if we are in the main menu screen or the visualisation screen.
   if (screenStart == 0) {
-    //initialScreen();
-    screenStart();
+    initialScreen();
+    //screenStart();
     
   } else if (screenStart == 1) {
     screenStart();
