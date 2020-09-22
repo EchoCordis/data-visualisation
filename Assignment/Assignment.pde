@@ -63,8 +63,7 @@ void initialScreen() {
 void screenStart() {
   toggleSliders();
   cp5 = new ControlP5(this);
-  cp5.addSlider("Volume").setPosition(350, 40).setRange(-60, 0);
-  cp5.addSlider("Slider").setPosition(150, 40).setRange(0, 255);
+  cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
 }
 
 
@@ -72,7 +71,6 @@ void toggleSliders() {
   //background(slider);
   fill(0, 76, 255);
   text(toggleMusic, 7, -30, 100, 100);
-  text(contrastBG, 110, -30, 200, 100);
   text(controlVolume, 300, -30, 200, 100);
   rect(buttonX, buttonY, buttonZ, buttonZ);
   audioplayer.setGain(volume);
@@ -90,7 +88,7 @@ void setup() {
   // allow audio API to be used here
   minim = new Minim(this);
   // load the audio file
-  audioplayer = minim.loadFile("bgmusic.mp3");
+  audioplayer = minim.loadFile("bgmusic.wav");
   size(1600, 1122);
   floorPlan = loadImage("data/floor.png");
   table = loadTable("people.csv", "header");
@@ -127,10 +125,14 @@ void setup() {
 
 //Function used to check the position of your mouse cursor when pressed down.
 void mousePressed() {
-  ellipse( mouseX, mouseY, 2, 2 );
-  fill(#FF0A0A);
-  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
-  println( "x: " + mouseX + " y: " + mouseY);
+  //ellipse( mouseX, mouseY, 2, 2 );
+  //fill(#FF0A0A);
+  //text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
+  //println( "x: " + mouseX + " y: " + mouseY);]
+     if( mouseX > buttonX && mouseX < buttonX + buttonZ &&
+      mouseY > buttonY && mouseY < buttonY + buttonZ){
+  playAudio = !playAudio; // will toggle pause/play music etc
+      }
 }
 
 
