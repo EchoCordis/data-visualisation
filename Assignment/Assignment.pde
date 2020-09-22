@@ -39,6 +39,9 @@ void setup() {
       .getValueLabel().setFont(font);
 
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
+  //Try to use the Coordiantes below
+  //X = random(210,1500);
+  //Y = random(439, 854);
   s = createShape();
   s.beginShape();
   s.vertex(220,854); //Use these dimensions to plot the data down.
