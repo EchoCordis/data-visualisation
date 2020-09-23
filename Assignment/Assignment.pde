@@ -29,7 +29,6 @@ AudioPlayer audioplayer;
 boolean playAudio = true;
 PGraphics pg;
 String toggleMusic = "Audio On/Off";
-//int screenStart = 0;
 String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
 String introBox = "Welcome to the Building 11 people counter data visualiser!";
@@ -37,6 +36,8 @@ String introBox2 = "In this application, we will simulate the entry of people in
 
 //Checks which is current screen - false = start screen, true = main screen
 boolean currentScreen = false;
+//Checks if the data visualisation for that day is done
+boolean visDone = false;
 
 // This is the main introduction screen. User must click to enter the
 // simulation of the data visualisation.
@@ -80,6 +81,8 @@ void initialiseUI() {
               .setSliderMode(Slider.FLEXIBLE)
               .setBroadcast(true);
   dateSlider.getValueLabel().setFont(font);
+  //Initalises text of the date slider
+  cp5.getController("date").setValueLabel(table.getString(date, 0));
   
   //Adds a start button to the start screen
   startButton = cp5.addButton("begin").setBroadcast(false)
@@ -141,7 +144,8 @@ void screenStart() {
   background(floorPlanbg);
   
   toggleSliders();
-
+  if (!visDone) { dataVis(date); }
+  
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
   //Try to use the Coordiantes below
   //X = random(210,1500);
@@ -171,8 +175,20 @@ void toggleSliders() {
   
 }
 
+//Displays circles on the screen depicting the amount of people on the level
+void dataVis(int day) {
+  
+  for (int people = 0; people <= table.getInt(day, 1); people++) {
+    float ellipseSize = random(5,10);
+    ellipse(random(10, 1000), random(10, 1000), ellipseSize, ellipseSize);
+    println(table.getInt(day, 1));
+  }
+  println("done");
+  visDone = true;
+}
+
 //Function used to check the position of your mouse cursor when pressed down.
-void mousePressed() {
+void mousePressed() {  
   ellipse( mouseX, mouseY, 2, 2 );
   fill(#FF0A0A);
   text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
@@ -187,31 +203,31 @@ void draw() {
   
   //Checks if we are in the title screen or the main visualisation screen.
   toggleScreen();
-
+  
   // loop through the csv file and save to variables.
-  while (row < table.getRowCount()) {
-    int people = table.getInt(row, 1);
-    String[] date = table.getString(row, 0).split("-");
-    String day = date[0];
-    String month = date[1];
-    row++;
-    //println(day + " " + month + " : " + people);
+  //while (row < table.getRowCount()) {
+  //  int people = table.getInt(row, 1);
+  //  String[] date = table.getString(row, 0).split("-");
+  //  String day = date[0];
+  //  String month = date[1];
+  //  row++;
+  //  //println(day + " " + month + " : " + people);
     
     
-     //get the amount of people for a specific day and loop through
-    for (int i = 0; i <= people; i++) {
-      fill(0);
-      stroke(255,0,0);
-      noSmooth();
-      strokeWeight(5);
-      //get a random x and y coordinate from the map
-      float xCord = random(220,1500);
-      float yCord = random(439, 850);
-      // plot a point on the map with the x and y coordinate.
-      point(xCord, yCord);
-      //pg.clear();
-    }
-  }
+  //   //get the amount of people for a specific day and loop through
+  //  for (int i = 0; i <= people; i++) {
+  //    fill(0);
+  //    stroke(255,0,0);
+  //    noSmooth();
+  //    strokeWeight(5);
+  //    //get a random x and y coordinate from the map
+  //    float xCord = random(220,1500);
+  //    float yCord = random(439, 850);
+  //    // plot a point on the map with the x and y coordinate.
+  //    point(xCord, yCord);
+  //    //pg.clear();
+  //  }
+  //}
 }
 
 //Event controller for the UI
@@ -219,8 +235,11 @@ void controlEvent(ControlEvent event){
   //Date slider controls
   if (event.isController()) {
     if (event.getController().getName() == "date"){
-       cp5.getController("date").setValueLabel(table.getString(date, 0));
-       //println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
+      cp5.getController("date").setValueLabel(table.getString(date, 0));
+       
+      visDone = false;
+      
+      //println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
     }
     //Start button controls
     //Disables the title screen and enables the main visualisation screen
