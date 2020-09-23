@@ -27,7 +27,7 @@ int row = 0;
 
 Minim minim;
 AudioPlayer audioplayer;
-boolean playAudio;
+boolean playAudio = true;
 int button_x = 50;
 int button_y = 50;
 int button_sz = 30;
@@ -40,7 +40,7 @@ String introBox = "Welcome to the Building 11 people counter data visualiser!";
 String introBox2 = "In this application, we will simulate the entry of people into building 11, based on sensory data.";
 
 //Checks which is current screen - false = start screen, true = main screen
-boolean currentScreen;
+boolean currentScreen = false;
 
 // This is the main introduction screen. User must click to enter the
 // simulation of the data visualisation.
@@ -51,19 +51,18 @@ void setup() {
   img = loadImage("banner.png");
   floorPlanbg = loadImage("data/02RI.png");
   table = loadTable("people.csv", "header");
-  background(floorPlanbg);
+  //background(floorPlanbg);
   pg = createGraphics(1600, 1122);  
-   // allow audio API to be used here
+  // allow audio API to be used here
   minim = new Minim(this);
   // load the audio file
   audioplayer = minim.loadFile("bgmusic.wav");
   f = createFont("Arial", 16, true);
-  currentScreen = false;
   
   //Initialises ControlP5 controller
   cp5 = new ControlP5(this);
-  
-  playAudio = true;
+  //Initialises the UI elements
+  initialiseUI();
 }
 
 //Initialises the different UI elements in the program
@@ -76,28 +75,31 @@ void initialiseUI() {
   volumeSlider.getValueLabel().setFont(font);
     
   //Adds a date slider into the main screen
-  dateSlider = cp5.addSlider("date")
+  dateSlider = cp5.addSlider("date").setBroadcast(false)
               //Max value is number of rows - 1 from the csv file (not including the headers)
               //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
               .setRange(0, 13409)  
               .setPosition(300, 100)  //Sets position of the slider
               .setSize(1000, 50)  //Sets slider's size
-              .setSliderMode(Slider.FLEXIBLE);
+              .setSliderMode(Slider.FLEXIBLE)
+              .setBroadcast(true);
   dateSlider.getValueLabel().setFont(font);
   
   //Adds a start button to the start screen
-  startButton = cp5.addButton("start")
+  startButton = cp5.addButton("begin").setBroadcast(false)
                 .setPosition(750, 700)
                 .setSize(200,50)
                 .activateBy(ControlP5.PRESS)
-                .setValue(0);
+                .setValue(0)
+                .setBroadcast(true);
   startButton.getCaptionLabel().setFont(font);
   
   //Adds a volume toggle to the main screen
-  volumeToggle = cp5.addToggle("mute")
+  volumeToggle = cp5.addToggle("mute").setBroadcast(false)
                   .setValue(true)
                   .setPosition(60,40)
-                  .setSize(40,40);
+                  .setSize(40,40)
+                  .setBroadcast(true);
   
   //Hides the sliders and volume toggle to begin with
   volumeSlider.hide();
@@ -117,10 +119,10 @@ void toggleScreen() {
 
 //Hides the start button and shows the other UI elements
 void toggleUI() {
-  volumeSlider.show();
-  dateSlider.show();
-  volumeToggle.show();
-  startButton.hide();
+    volumeSlider.show();
+    dateSlider.show();
+    volumeToggle.show();
+    startButton.hide();
 }
 
 void initialScreen() {
@@ -227,7 +229,7 @@ void controlEvent(ControlEvent event){
     //Start button controls
     //Disables the title screen and enables the main visualisation screen
     //Also starts playing the background music
-    if (event.getController().getName() == "start"){
+    if (event.getController().getName() == "begin"){
       toggleUI();
       currentScreen = true;
       audioplayer.play();
