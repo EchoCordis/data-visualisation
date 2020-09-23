@@ -9,7 +9,7 @@ Slider volumeSlider;
 Slider dateSlider;
 Button startButton;
 Toggle volumeToggle;
-int date = 0;  //Used for the slider's label
+int date = 0;  //Used for the date slider
 
 PImage floorPlanbg;
 PImage img;
@@ -38,9 +38,6 @@ String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
 String introBox = "Welcome to the Building 11 people counter data visualiser!";
 String introBox2 = "In this application, we will simulate the entry of people into building 11, based on sensory data.";
-int buttonX = 40;
-int buttonY = 40;
-int buttonZ = 20;
 
 //Checks which is current screen - false = start screen, true = main screen
 boolean currentScreen;
@@ -65,8 +62,6 @@ void setup() {
   
   //Initialises ControlP5 controller
   cp5 = new ControlP5(this);
-  //Initialises the UI elements
-  initialiseUI();
   
   playAudio = true;
 }
@@ -140,16 +135,13 @@ void initialScreen() {
   text(introBox2, 830, 620);
 }
 
-//void startDataVisualiser() {
-//  screenStart = 1;
-//}
-
 //This is the main screen where the data is visualised.
 //Introduce sliders to control the volumne and possible another slider to control
 //background contrast
 
 void screenStart() {
   background(floorPlanbg);
+  
   toggleSliders();
 
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
@@ -177,7 +169,6 @@ void toggleSliders() {
   text("Change Date Region",1450,125);
 
   //text(controlVolume, 300, -30, 200, 100);
-  //rect(buttonX, buttonY, buttonZ, buttonZ);
   audioplayer.setGain(volume);
   
 }
@@ -188,10 +179,6 @@ void mousePressed() {
   fill(#FF0A0A);
   text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
   //println( "x: " + mouseX + " y: " + mouseY);]
-
-  //if (screenStart == 0) {
-  //  startDataVisualiser();
-  //}
 }
 
 void draw() {
@@ -210,7 +197,7 @@ void draw() {
     String day = date[0];
     String month = date[1];
     row++;
-    println(day + " " + month + " : " + people);
+    //println(day + " " + month + " : " + people);
     
     
      //get the amount of people for a specific day and loop through
@@ -231,11 +218,13 @@ void draw() {
 
 //Event controller for the UI
 void controlEvent(ControlEvent event){
+  //Date slider controls
   if (event.isController()) {
     if (event.getController().getName() == "date"){
        cp5.getController("date").setValueLabel(table.getString(date, 0));
-       println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
+       //println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
     }
+    //Start button controls
     //Disables the title screen and enables the main visualisation screen
     //Also starts playing the background music
     if (event.getController().getName() == "start"){
@@ -244,7 +233,8 @@ void controlEvent(ControlEvent event){
       audioplayer.play();
       playAudio = !playAudio;
     }
-    //Mutes/Unmutes the audio
+    //Mute button controls
+    //Mutes/Unmutes the audio depending on the playAudio boolean's state
     if (event.getController().getName() == "mute"){
       if(playAudio){
         audioplayer.play();
