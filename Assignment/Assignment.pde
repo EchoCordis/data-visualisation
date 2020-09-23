@@ -14,7 +14,6 @@ int date = 0;  //Used for the date slider
 PImage floorPlanbg;
 PImage img;
 //PImage imgMask;
-int slider = 100;
 int volume = -10;
 PFont f;
 Table table;
@@ -28,9 +27,6 @@ int row = 0;
 Minim minim;
 AudioPlayer audioplayer;
 boolean playAudio = true;
-int button_x = 50;
-int button_y = 50;
-int button_sz = 30;
 PGraphics pg;
 String toggleMusic = "Audio On/Off";
 //int screenStart = 0;
