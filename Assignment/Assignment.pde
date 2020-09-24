@@ -180,7 +180,7 @@ void dataVis(int day) {
   
   for (int people = 0; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
-    ellipse(random(10, 1000), random(10, 1000), ellipseSize, ellipseSize);
+    ellipse(random(220,1500), random(459, 850), ellipseSize, ellipseSize);
     println(table.getInt(day, 1));
   }
   println("done");
