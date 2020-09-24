@@ -216,7 +216,7 @@ void toggleSliders() {
 //Displays circles on the screen depicting the amount of people on the level
 void dataVis(int day) {
   
-  for (int people = 0; people <= table.getInt(day, 1); people++) {
+  for (int people = 1; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
     ellipse(random(191, 1486), random(469, 826), ellipseSize, ellipseSize);
     println(table.getInt(day, 1));
