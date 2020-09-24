@@ -35,7 +35,8 @@ String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
 String introBox = "Welcome to the Building 11 people counter data visualiser!";
 String introBox2 = "In this application, we will simulate the entry of people into Level 2 of Building 11, based on sensory data.";
-String introBox3 = "Made by: Abderraouf Abbou, Charlie Phong, Donavan Le, Yuhao Song";
+String introBox3 = "The aim of this application is to provide a visualisation of the impact of COVID-19 on visits to the university's campus.";
+String creditsBox = "Made by: Abderraouf Abbou, Charlie Phong, Donavan Le, Yuhao Song";
 
 //Checks which is current screen - false = start screen, true = main screen
 boolean currentScreen = false;
@@ -152,18 +153,19 @@ void initialScreen() {
   image(img,0,0);
   textAlign(CENTER, CENTER);
   fill(0);
+  
   //Adds introductory text
   textSize(24);
-  text(introBox, 800, 600);
-  text(introBox2, 830, 620);
-  text(introBox3, 830, 1100);
+  text(introBox, 800, 550);
+  text(introBox2, 830, 580);
+  text(introBox3, 830, 610);
+  text(creditsBox, 830, 1100);
 }
 
 //This is the main screen where the data is visualised.
 //Introduce sliders to control the volumne and possible another slider to control
 //background contrast
 void screenStart() {
-  //background(floorPlanbg);
   fill(#FF0A0A);
   if (!visDone) { 
     background(floorPlanbg); 
@@ -206,7 +208,6 @@ void toggleText() {
   text("Change Volume",1450,55);
   text("Change Date Region",1450,125);
   textSize(25);
-  //String[] tempString = table.getString(date, 0).split(" |,");
   text("Number of visitors: " + table.getInt(date, 1), 800, 200);
 
   //text(controlVolume, 300, -30, 200, 100);
@@ -225,22 +226,20 @@ void dataVis(int day) {
 
 //Control visibility of highest density date
 public void HighestDensityDate()
-  {
-    println("03 March 2020 at 9:30am - 142");
-    if(!t){
-      t = true;
-    }else{
-      t = false;}
-  }
+{
+  println("21 March 2019 at 9:00am - 142");
+  //Display the highest density date
+  text("21 March 2019 at 9:00am", 600,1100);
+  text("284 Visitors", 600,1150);
+
+}
  
 //Control visibility of Lowest density date
 public void LowestDensityDate()
 {
   println("6 June");
-  if(!l){
-    l=true;
-  }else{
-    l=false;}
+  //Display the lowest density date
+  text("6 June",  1000, 1100);
 }
 
 //Function used to check the position of your mouse cursor when pressed down.
@@ -261,17 +260,6 @@ void draw() {
   toggleScreen();
   //Changes volume of BG music depending on the volume slider's value
   audioplayer.setGain(volume);
-  
-  //print the highest density date
-  if(t){
-    text("03 March 2020 at 9:30am", 600,1100);
-    text("142 Visitors", 600,1150);
-  }
- 
-  //print the Lowest density date
-  if(l){
-    text("6 June",  1000, 1100);
-  }
 
   // loop through the csv file and save to variables.
   //while (row < table.getRowCount()) {
