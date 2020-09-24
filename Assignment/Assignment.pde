@@ -70,7 +70,7 @@ void setup() {
 
 //Initialises the different UI elements in the program
 void initialiseUI() {
-  //Makes a font to be used for the slider's value labels
+  //Makes a font to be used for the buttons' and sliders' value labels
   ControlFont font = new ControlFont(createFont("Calibri", 20));
   
   //Adds a volume slider into the main screen
@@ -111,18 +111,20 @@ void initialiseUI() {
                       .setValue(0)
                       .setColorBackground(255)
                       .setCaptionLabel("Highest Density Date")
-                      .setPosition(950,700)
-                      .setSize(250,100)
+                      .setPosition(550,1000)
+                      .setSize(200,50)
                       .setBroadcast(true);
+  highDensityButton.getCaptionLabel().setFont(font);
  
   //Adds a button showing the day and month of the lowest density of visitors
   lowDensityButton = cp5.addButton("LowestDensityDate").setBroadcast(false)
                       .setValue(0)
                       .setColorBackground(255)
                       .setCaptionLabel("Lowest Density Date")
-                      .setPosition(1300,700)
-                      .setSize(250,100)
+                      .setPosition(900,1000)
+                      .setSize(200,50)
                       .setBroadcast(true);
+  lowDensityButton.getCaptionLabel().setFont(font);
   
   //Hides the sliders and volume toggle to begin with
   volumeSlider.hide();
@@ -209,7 +211,7 @@ void dataVis(int day) {
   
   for (int people = 0; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
-    ellipse(random(10, 1000), random(10, 1000), ellipseSize, ellipseSize);
+    ellipse(random(191, 1486), random(466, 826), ellipseSize, ellipseSize);
     println(table.getInt(day, 1));
   }
   println("done");
@@ -255,12 +257,12 @@ void draw() {
   
   //print the highest density date
   if(t){
-    text("23 September", 1075,850);
+    text("23 September", 650,1100);
   }
  
   //print the Lowest density date
   if(l){
-    text("6 June",  1425, 850);
+    text("6 June",  1000, 1100);
   }
 
   // loop through the csv file and save to variables.
