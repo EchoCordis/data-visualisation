@@ -13,23 +13,14 @@ Button highDensityButton;  //Highest density button
 Button lowDensityButton;  //Lowest density button
 int date = 0;  //Used for the date slider
 
-PImage floorPlanbg;
-PImage img;
-//PImage imgMask;
-int volume = -10;
-PFont f;
-Table table;
-PShape s;
-Textarea introductionBox;
-float positionX;
-float positionY;
-float positionZ;
-int row = 0;
+PImage floorPlanbg;  //Image of the floorplan
+PImage img;  //Image of the start screen's banner
+int volume = -10;  //Used for the volume slider
+Table table;  //Table storing contents of the CSV file
 
 Minim minim;
 AudioPlayer audioplayer;
 boolean playAudio = true;
-PGraphics pg;
 String toggleMusic = "Audio On/Off";
 String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
@@ -43,12 +34,6 @@ boolean currentScreen = false;
 //Checks if the data visualisation for that day is done
 boolean visDone = false;
 
-//Boolean links to highest and lowest buttons
-boolean t = false;
-boolean l = false;
-
-// This is the main introduction screen. User must click to enter the
-// simulation of the data visualisation.
 
 void setup() {
   frameRate(240);
@@ -56,15 +41,13 @@ void setup() {
   img = loadImage("banner.png");
   floorPlanbg = loadImage("data/02RI.jpg");
   table = loadTable("PC0214.csv", "header");
-  //background(floorPlanbg);
-  pg = createGraphics(1600, 1122);  
+  //background(floorPlanbg); 
   // allow audio API to be used here
   minim = new Minim(this);
   // load the audio file
   audioplayer = minim.loadFile("bgmusic.wav");
   //Set the music to loop indefinitely
   audioplayer.loop();
-  f = createFont("Arial", 16, true);
   
   //Initialises ControlP5 controller
   cp5 = new ControlP5(this);
@@ -147,6 +130,8 @@ void toggleUI() {
 }
 
 //Draws the start screen
+// This is the main introduction screen. User must click to enter the
+// simulation of the data visualisation.
 void initialScreen() {
   // white background and text align center
   background(255);
@@ -172,21 +157,6 @@ void screenStart() {
     toggleText(); 
     dataVis(date); 
   }
-  
-  //Creates the same shape of the floor plan. This will contain all of the plotted data points.
-  //Try to use the Coordinates below
-  //X = random(210,1500);
-  //Y = random(439, 854);
-  s = createShape();
-  s.beginShape();
-  s.vertex(220,854); //Use these dimensions to plot the data down.
-  s.vertex(210, 439);
-  s.vertex(1484,465);
-  s.vertex(1503,835);
-  s.noFill();
-  s.noStroke();
-  s.endShape(CLOSE);
-  shape(s,0,0);
 }
 
 //Toggles the screen between the start screen and the main visualisation screen
@@ -201,16 +171,12 @@ void toggleScreen() {
 
 //Shows label text next to buttons/sliders
 void toggleText() {
-  //background(slider);
-  //fill(0, 76, 255);
   textSize(17);
   text(toggleMusic, 100, 100);
   text("Change Volume",1450,55);
   text("Change Date Region",1450,125);
   textSize(25);
   text("Number of visitors: " + table.getInt(date, 1), 800, 200);
-
-  //text(controlVolume, 300, -30, 200, 100);
 }
 
 //Displays circles on the screen depicting the amount of people on the level
@@ -242,49 +208,11 @@ public void LowestDensityDate()
   text("6 June",  1000, 1100);
 }
 
-//Function used to check the position of your mouse cursor when pressed down.
-//void mousePressed() {  
-//  ellipse( mouseX, mouseY, 2, 2 );
-//  fill(#FF0A0A);
-//  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
-//  //println( "x: " + mouseX + " y: " + mouseY);]
-//}
-
 void draw() {
-  //strokeWeight(3);
-  //positionX = random(220,1500);
-  //positionY = random(439, 854);
-  //rect(positionX,positionY,20,20,10);
-  
   //Checks if we are in the title screen or the main visualisation screen.
   toggleScreen();
   //Changes volume of BG music depending on the volume slider's value
   audioplayer.setGain(volume);
-
-  // loop through the csv file and save to variables.
-  //while (row < table.getRowCount()) {
-  //  int people = table.getInt(row, 1);
-  //  String[] date = table.getString(row, 0).split("-");
-  //  String day = date[0];
-  //  String month = date[1];
-  //  row++;
-  //  //println(day + " " + month + " : " + people);
-    
-    
-  //   //get the amount of people for a specific day and loop through
-  //  for (int i = 0; i <= people; i++) {
-  //    fill(0);
-  //    stroke(255,0,0);
-  //    noSmooth();
-  //    strokeWeight(5);
-  //    //get a random x and y coordinate from the map
-  //    float xCord = random(220,1500);
-  //    float yCord = random(439, 850);
-  //    // plot a point on the map with the x and y coordinate.
-  //    point(xCord, yCord);
-  //    //pg.clear();
-  //  }
-  //}
 }
 
 //Event controller for the UI elements
