@@ -215,7 +215,7 @@ void toggleText() {
 void dataVis(int day) {
   for (int people = 1; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
-    ellipse(random(200, 1500), random(313, 686), ellipseSize, ellipseSize);
+    ellipse(random(220, 1530), random(343, 726), ellipseSize, ellipseSize);
     println(table.getInt(day, 1));
   }
   println("done");
