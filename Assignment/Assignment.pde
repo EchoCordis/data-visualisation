@@ -14,23 +14,15 @@ Button highDensityButton;  //Highest density button
 Button lowDensityButton;  //Lowest density button
 int date = 0;  //Used for the date slider
 
-PImage floorPlanbg;
-PImage img;
-//PImage imgMask;
-int volume = -10;
-PFont f;
-Table table;
-PShape s;
-Textarea introductionBox;
-float positionX;
-float positionY;
-float positionZ;
-int row = 0;
-//color c = color(255, 204, 0);
+PImage floorPlanbg;  //Image of the floorplan
+PImage img;  //Image of the start screen's banner
+int volume = -10;  //Used for the volume slider
+Table table;  //Table storing contents of the CSV file
 
 Minim minim;
 AudioPlayer audioplayer;
 boolean playAudio = true;
+
 PGraphics pg;
 String toggleMusic = "Mute";
 String contrastBG = "Contrast of Background";
@@ -41,12 +33,6 @@ boolean currentScreen = false;
 //Checks if the data visualisation for that day is done
 boolean visDone = false;
 
-//Boolean links to highest and lowest buttons
-boolean t = false;
-boolean l = false;
-
-// This is the main introduction screen. User must click to enter the
-// simulation of the data visualisation.
 
 void setup() {
   frameRate(240);
@@ -55,12 +41,13 @@ void setup() {
   floorPlanbg = loadImage("data/02R2.jpg");
   table = loadTable("people.csv", "header");
   //background(floorPlanbg);
-  pg = createGraphics(1600, 1122);  
+
   // allow audio API to be used here
   minim = new Minim(this);
   // load the audio file
   audioplayer = minim.loadFile("bgmusic.wav");
-  f = createFont("Arial", 16, true);
+  //Set the music to loop indefinitely
+  audioplayer.loop();
   
   //Initialises ControlP5 controller
   cp5 = new ControlP5(this);
@@ -131,7 +118,7 @@ void initialiseUI() {
                       .setColorActive(0xffFFFFFF)
                       .setValue(0)
                       .setCaptionLabel("Highest Density Date")
-                      .setPosition(550,1000)
+                      .setPosition(500,1000)
                       .setSize(200,50)
                       .setBroadcast(true);
   highDensityButton.getCaptionLabel().setFont(font);
@@ -167,12 +154,15 @@ void toggleUI() {
 }
 
 //Draws the start screen
+// This is the main introduction screen. User must click to enter the
+// simulation of the data visualisation.
 void initialScreen() {
   // white background and text align center
   background(255);
   image(img,0,0);
   textAlign(CENTER, CENTER);
   fill(0);
+  
   //Adds introductory text
   textSize(24);
 }
@@ -181,7 +171,6 @@ void initialScreen() {
 //Introduce sliders to control the volumne and possible another slider to control
 //background contrast
 void screenStart() {
-  //background(floorPlanbg);
   fill(#FF0A0A);
   if (!visDone) { 
     background(floorPlanbg);
@@ -191,21 +180,6 @@ void screenStart() {
     toggleText(); 
     dataVis(date); 
   }
-  
-  //Creates the same shape of the floor plan. This will contain all of the plotted data points.
-  //Try to use the Coordinates below
-  //X = random(210,1500);
-  //Y = random(439, 854);
-  s = createShape();
-  s.beginShape();
-  s.vertex(220,854); //Use these dimensions to plot the data down.
-  s.vertex(210, 439);
-  s.vertex(1484,465);
-  s.vertex(1503,835);
-  s.noFill();
-  s.noStroke();
-  s.endShape(CLOSE);
-  shape(s,0,0);
 }
 
 //Toggles the screen between the start screen and the main visualisation screen
@@ -220,6 +194,7 @@ void toggleScreen() {
 
 //Shows label text next to buttons/sliders
 void toggleText() {
+
   //background(slider);
   fill(255);
   textSize(17);
@@ -238,7 +213,6 @@ void toggleText() {
 
 //Displays circles on the screen depicting the amount of people on the level
 void dataVis(int day) {
-  
   for (int people = 1; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
     ellipse(random(200, 1500), random(313, 686), ellipseSize, ellipseSize);
@@ -250,77 +224,27 @@ void dataVis(int day) {
 
 //Control visibility of highest density date
 public void HighestDensityDate()
-  {
-    println("23 September");
-    if(!t){
-      t = true;
-    }else{
-      t = false;}
-  }
+{
+  println("21 March 2019 at 9:00am - 142");
+  //Display the highest density date
+  text("21 March 2019 at 9:00am", 600,1100);
+  text("284 Visitors", 600,1150);
+
+}
  
 //Control visibility of Lowest density date
 public void LowestDensityDate()
 {
   println("6 June");
-  if(!l){
-    l=true;
-  }else{
-    l=false;}
+  //Display the lowest density date
+  text("6 June",  1000, 1100);
 }
 
-//Function used to check the position of your mouse cursor when pressed down.
-//void mousePressed() {  
-//  ellipse( mouseX, mouseY, 2, 2 );
-//  fill(#FF0A0A);
-//  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
-//  //println( "x: " + mouseX + " y: " + mouseY);]
-//}
-
 void draw() {
-  //strokeWeight(3);
-  //positionX = random(220,1500);
-  //positionY = random(439, 854);
-  //rect(positionX,positionY,20,20,10);
-  
   //Checks if we are in the title screen or the main visualisation screen.
   toggleScreen();
   //Changes volume of BG music depending on the volume slider's value
   audioplayer.setGain(volume);
-  
-  //print the highest density date
-  if(t){
-    text("23 September", 650,1100);
-  }
- 
-  //print the Lowest density date
-  if(l){
-    text("6 June",  1000, 1100);
-  }
-
-  // loop through the csv file and save to variables.
-  //while (row < table.getRowCount()) {
-  //  int people = table.getInt(row, 1);
-  //  String[] date = table.getString(row, 0).split("-");
-  //  String day = date[0];
-  //  String month = date[1];
-  //  row++;
-  //  //println(day + " " + month + " : " + people);
-    
-    
-  //   //get the amount of people for a specific day and loop through
-  //  for (int i = 0; i <= people; i++) {
-  //    fill(0);
-  //    stroke(255,0,0);
-  //    noSmooth();
-  //    strokeWeight(5);
-  //    //get a random x and y coordinate from the map
-  //    float xCord = random(220,1500);
-  //    float yCord = random(439, 850);
-  //    // plot a point on the map with the x and y coordinate.
-  //    point(xCord, yCord);
-  //    //pg.clear();
-  //  }
-  //}
 }
 
 //Event controller for the UI elements
@@ -331,7 +255,6 @@ void controlEvent(ControlEvent event){
     if (event.getController().getName() == "date"){
       cp5.getController("date").setValueLabel(table.getString(date, 0));
       visDone = false;
-      //println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
     }
     //Start button controls
     //Disables the title screen and enables the main visualisation screen
