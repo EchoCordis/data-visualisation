@@ -1,14 +1,16 @@
-import controlP5.*;
 //This imported library is ued to create on screen GUIs such as the slider.
+import controlP5.*;
 //Minim is an audio library that uses the JavaSound API
 import ddf.minim.*;
 
 //UI Elements
-ControlP5 cp5;
-Slider volumeSlider;
-Slider dateSlider;
-Button startButton;
-Toggle volumeToggle;
+ControlP5 cp5;  //ControlP5 controller
+Slider volumeSlider;  //Volume slider
+Slider dateSlider;  //Date slider
+Button startButton;  //Start button
+Toggle volumeToggle;  //Volume toggle
+Button highDensityButton;  //Highest density button
+Button lowDensityButton;  //Lowest density button
 int date = 0;  //Used for the date slider
 
 PImage floorPlanbg;
@@ -39,6 +41,10 @@ boolean currentScreen = false;
 //Checks if the data visualisation for that day is done
 boolean visDone = false;
 
+//Boolean links to highest and lowest buttons
+boolean t = false;
+boolean l = false;
+
 // This is the main introduction screen. User must click to enter the
 // simulation of the data visualisation.
 
@@ -64,7 +70,7 @@ void setup() {
 
 //Initialises the different UI elements in the program
 void initialiseUI() {
-  //Makes a font to be used for the slider's labels
+  //Makes a font to be used for the slider's value labels
   ControlFont font = new ControlFont(createFont("Calibri", 20));
   
   //Adds a volume slider into the main screen
@@ -96,24 +102,34 @@ void initialiseUI() {
   //Adds a volume toggle to the main screen
   volumeToggle = cp5.addToggle("mute").setBroadcast(false)
                   .setValue(true)
-                  .setPosition(60,40)
+                  .setPosition(80,40)
                   .setSize(40,40)
                   .setBroadcast(true);
+                  
+  //Adds a button showing the day and month of the highest density of visitors
+  highDensityButton = cp5.addButton("HighestDensityDate").setBroadcast(false)
+                      .setValue(0)
+                      .setColorBackground(255)
+                      .setCaptionLabel("Highest Density Date")
+                      .setPosition(950,700)
+                      .setSize(250,100)
+                      .setBroadcast(true);
+ 
+  //Adds a button showing the day and month of the lowest density of visitors
+  lowDensityButton = cp5.addButton("LowestDensityDate").setBroadcast(false)
+                      .setValue(0)
+                      .setColorBackground(255)
+                      .setCaptionLabel("Lowest Density Date")
+                      .setPosition(1300,700)
+                      .setSize(250,100)
+                      .setBroadcast(true);
   
   //Hides the sliders and volume toggle to begin with
   volumeSlider.hide();
   dateSlider.hide();
   volumeToggle.hide();
-}
-
-//Toggles the screen between the start screen and the main visualisation screen
-void toggleScreen() {
-  if (currentScreen) {
-    screenStart();
-  }
-  else if (!currentScreen) {
-    initialScreen();
-  }
+  highDensityButton.hide();
+  lowDensityButton.hide();
 }
 
 //Hides the start button and shows the other UI elements
@@ -121,12 +137,14 @@ void toggleUI() {
     volumeSlider.show();
     dateSlider.show();
     volumeToggle.show();
+    highDensityButton.show();
+    lowDensityButton.show();
     startButton.hide();
 }
 
+//Draws the start screen
 void initialScreen() {
   // white background and text align center
-
   background(255);
   image(img,0,0);
   textAlign(CENTER, CENTER);
@@ -162,6 +180,17 @@ void screenStart() {
   shape(s,0,0);
 }
 
+//Toggles the screen between the start screen and the main visualisation screen
+void toggleScreen() {
+  if (currentScreen) {
+    screenStart();
+  }
+  else if (!currentScreen) {
+    initialScreen();
+  }
+}
+
+//Shows label text next to buttons/sliders
 void toggleSliders() {
   //background(slider);
   //fill(0, 76, 255);
@@ -187,6 +216,26 @@ void dataVis(int day) {
   visDone = true;
 }
 
+//Control visibility of highest density date
+public void HighestDensityDate()
+  {
+    println("23 September");
+    if(!t){
+      t = true;
+    }else{
+      t = false;}
+  }
+ 
+//Control visibility of Lowest density date
+public void LowestDensityDate()
+{
+  println("6 June");
+  if(!l){
+    l=true;
+  }else{
+    l=false;}
+}
+
 //Function used to check the position of your mouse cursor when pressed down.
 void mousePressed() {  
   ellipse( mouseX, mouseY, 2, 2 );
@@ -204,6 +253,16 @@ void draw() {
   //Checks if we are in the title screen or the main visualisation screen.
   toggleScreen();
   
+  //print the highest density date
+  if(t){
+    text("23 September", 1075,850);
+  }
+ 
+  //print the Lowest density date
+  if(l){
+    text("6 June",  1425, 850);
+  }
+
   // loop through the csv file and save to variables.
   //while (row < table.getRowCount()) {
   //  int people = table.getInt(row, 1);
@@ -230,15 +289,13 @@ void draw() {
   //}
 }
 
-//Event controller for the UI
+//Event controller for the UI elements
 void controlEvent(ControlEvent event){
   //Date slider controls
   if (event.isController()) {
     if (event.getController().getName() == "date"){
       cp5.getController("date").setValueLabel(table.getString(date, 0));
-       
       visDone = false;
-      
       //println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
     }
     //Start button controls
