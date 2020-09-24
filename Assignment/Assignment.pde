@@ -39,7 +39,7 @@ void setup() {
   size(1700, 863);
   img = loadImage("banner2.png");
   floorPlanbg = loadImage("data/02R2.jpg");
-  table = loadTable("people.csv", "header");
+  table = loadTable("PC0214.csv", "header");
   //background(floorPlanbg);
 
   // allow audio API to be used here
@@ -75,11 +75,11 @@ void initialiseUI() {
   dateSlider = cp5.addSlider("date").setBroadcast(false)
               //Max value is number of rows - 1 from the csv file (not including the headers)
               //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
+              .setRange(0, 25632)
               .setColorForeground(#AFAFAF)
               .setCaptionLabel("")
               .setColorBackground(0)
               .setColorActive(0xffFFFFFF)
-              .setRange(0, 13409)  
               .setPosition(250, 85)  //Sets position of the slider
               .setSize(1200, 50)  //Sets slider's size
               .setSliderMode(Slider.FLEXIBLE)
@@ -215,11 +215,18 @@ void toggleText() {
 void dataVis(int day) {
   for (int people = 1; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
-    ellipse(random(200, 1500), random(313, 686), ellipseSize, ellipseSize);
+    ellipse(random(200, 1500), random(360, 720), ellipseSize, ellipseSize);
     println(table.getInt(day, 1));
   }
   println("done");
   visDone = true;
+}
+
+void mousePressed() {  
+  ellipse( mouseX, mouseY, 2, 2 );
+  fill(#FF0A0A);
+  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
+  //println( "x: " + mouseX + " y: " + mouseY);]
 }
 
 //Control visibility of highest density date
