@@ -46,7 +46,7 @@ void setup() {
   frameRate(240);
   size(1700, 1193);
   img = loadImage("banner.png");
-  floorPlanbg = loadImage("data/02RI.png");
+  floorPlanbg = loadImage("data/02RI.jpg");
   table = loadTable("people.csv", "header");
   //background(floorPlanbg);
   pg = createGraphics(1600, 1122);  
@@ -141,10 +141,10 @@ void initialScreen() {
 //background contrast
 
 void screenStart() {
-  background(floorPlanbg);
-  
+  //background(floorPlanbg);
+
   toggleSliders();
-  if (!visDone) { dataVis(date); }
+  if (!visDone) { background(floorPlanbg); dataVis(date); }
   
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
   //Try to use the Coordiantes below
