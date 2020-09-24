@@ -39,7 +39,7 @@ void setup() {
   size(1700, 863);
   img = loadImage("banner2.png");
   floorPlanbg = loadImage("data/02R2.jpg");
-  table = loadTable("people.csv", "header");
+  table = loadTable("PC0214.csv", "header");
   //background(floorPlanbg);
 
   // allow audio API to be used here
@@ -75,11 +75,11 @@ void initialiseUI() {
   dateSlider = cp5.addSlider("date").setBroadcast(false)
               //Max value is number of rows - 1 from the csv file (not including the headers)
               //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
+              .setRange(0, 25362)
               .setColorForeground(#AFAFAF)
               .setCaptionLabel("")
               .setColorBackground(0)
               .setColorActive(0xffFFFFFF)
-              .setRange(0, 13409)  
               .setPosition(250, 85)  //Sets position of the slider
               .setSize(1200, 50)  //Sets slider's size
               .setSliderMode(Slider.FLEXIBLE)
