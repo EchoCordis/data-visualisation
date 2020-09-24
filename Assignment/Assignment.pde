@@ -215,7 +215,7 @@ void toggleText() {
 
 //Displays circles on the screen depicting the amount of people on the level
 void dataVis(int day) {
-  String[] tempString = table.getString(date, 0).split(" |,");
+  String[] tempString = table.getString(day, 0).split(" |,");
   for (int people = 1; people <= Integer.parseInt(tempString[2]); people++) {
     float ellipseSize = random(5,10);
     ellipse(random(191, 1486), random(469, 826), ellipseSize, ellipseSize);
