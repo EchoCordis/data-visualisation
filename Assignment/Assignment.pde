@@ -61,6 +61,8 @@ void setup() {
   minim = new Minim(this);
   // load the audio file
   audioplayer = minim.loadFile("bgmusic.wav");
+  //Set the music to loop indefinitely
+  audioplayer.loop();
   f = createFont("Arial", 16, true);
   
   //Initialises ControlP5 controller
