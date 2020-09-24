@@ -7,6 +7,7 @@ import ddf.minim.*;
 ControlP5 cp5;  //ControlP5 controller
 Slider volumeSlider;  //Volume slider
 Slider dateSlider;  //Date slider
+Knob volumeKnob;
 Button startButton;  //Start button
 Toggle volumeToggle;  //Volume toggle
 Button highDensityButton;  //Highest density button
@@ -21,13 +22,11 @@ Table table;  //Table storing contents of the CSV file
 Minim minim;
 AudioPlayer audioplayer;
 boolean playAudio = true;
-String toggleMusic = "Audio On/Off";
+
+PGraphics pg;
+String toggleMusic = "Mute";
 String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
-String introBox = "Welcome to the Building 11 people counter data visualiser!";
-String introBox2 = "In this application, we will simulate the entry of people into Level 2 of Building 11, based on sensory data.";
-String introBox3 = "The aim of this application is to provide a visualisation of the impact of COVID-19 on visits to the university's campus.";
-String creditsBox = "Made by: Abderraouf Abbou, Charlie Phong, Donavan Le, Yuhao Song";
 
 //Checks which is current screen - false = start screen, true = main screen
 boolean currentScreen = false;
@@ -37,11 +36,12 @@ boolean visDone = false;
 
 void setup() {
   frameRate(240);
-  size(1700, 1193);
-  img = loadImage("banner.png");
-  floorPlanbg = loadImage("data/02RI.jpg");
-  table = loadTable("PC0214.csv", "header");
-  //background(floorPlanbg); 
+  size(1700, 863);
+  img = loadImage("banner2.png");
+  floorPlanbg = loadImage("data/02R2.jpg");
+  table = loadTable("people.csv", "header");
+  //background(floorPlanbg);
+
   // allow audio API to be used here
   minim = new Minim(this);
   // load the audio file
@@ -58,19 +58,30 @@ void setup() {
 //Initialises the different UI elements in the program
 void initialiseUI() {
   //Makes a font to be used for the buttons' and sliders' value labels
-  ControlFont font = new ControlFont(createFont("Calibri", 20));
+  ControlFont font = new ControlFont(createFont("Poppins", 20));
   
   //Adds a volume slider into the main screen
-  volumeSlider = cp5.addSlider("volume").setPosition(300,30).setRange(-60, 0).setSize(1000,50);
-  volumeSlider.getValueLabel().setFont(font);
+  volumeKnob = cp5.addKnob("volume")
+              .setColorForeground(#AFAFAF)
+              .setCaptionLabel("")
+              .setColorBackground(0)
+              .setColorActive(0xffFFFFFF)
+              .setPosition(50,60)
+              .setRange(-50,50)
+              .setRadius(40);
+  volumeKnob.getValueLabel().setFont(font);
     
   //Adds a date slider into the main screen
   dateSlider = cp5.addSlider("date").setBroadcast(false)
               //Max value is number of rows - 1 from the csv file (not including the headers)
               //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
-              .setRange(0, 25632)  
-              .setPosition(300, 100)  //Sets position of the slider
-              .setSize(1000, 50)  //Sets slider's size
+              .setColorForeground(#AFAFAF)
+              .setCaptionLabel("")
+              .setColorBackground(0)
+              .setColorActive(0xffFFFFFF)
+              .setRange(0, 13409)  
+              .setPosition(250, 85)  //Sets position of the slider
+              .setSize(1200, 50)  //Sets slider's size
               .setSliderMode(Slider.FLEXIBLE)
               .setBroadcast(true);
   dateSlider.getValueLabel().setFont(font);
@@ -79,7 +90,10 @@ void initialiseUI() {
   
   //Adds a start button to the start screen
   startButton = cp5.addButton("begin").setBroadcast(false)
-                .setPosition(750, 700)
+                .setPosition(750, 610)
+                .setColorForeground(#AFAFAF)
+                .setColorBackground(0)
+                .setColorActive(0xffFFFFFF)
                 .setSize(200,50)
                 .activateBy(ControlP5.PRESS)
                 .setValue(0)
@@ -88,13 +102,20 @@ void initialiseUI() {
   
   //Adds a volume toggle to the main screen
   volumeToggle = cp5.addToggle("mute").setBroadcast(false)
+                  .setCaptionLabel("")
                   .setValue(true)
-                  .setPosition(80,40)
+                  .setColorForeground(255)
+                  .setColorBackground(0)
+                  .setColorActive(0xffFFFFFF)
+                  .setPosition(170,90)
                   .setSize(40,40)
                   .setBroadcast(true);
                   
   //Adds a button showing the day and month of the highest density of visitors
   highDensityButton = cp5.addButton("HighestDensityDate").setBroadcast(false)
+                      .setColorForeground(#AFAFAF)
+                      .setColorBackground(0)
+                      .setColorActive(0xffFFFFFF)
                       .setValue(0)
                       .setCaptionLabel("Highest Density Date")
                       .setPosition(500,1000)
@@ -104,6 +125,9 @@ void initialiseUI() {
  
   //Adds a button showing the day and month of the lowest density of visitors
   lowDensityButton = cp5.addButton("LowestDensityDate").setBroadcast(false)
+                      .setColorForeground(#AFAFAF)
+                      .setColorBackground(0)
+                      .setColorActive(0xffFFFFFF)
                       .setValue(0)
                       .setCaptionLabel("Lowest Density Date")
                       .setPosition(900,1000)
@@ -112,7 +136,7 @@ void initialiseUI() {
   lowDensityButton.getCaptionLabel().setFont(font);
   
   //Hides the sliders and volume toggle to begin with
-  volumeSlider.hide();
+  volumeKnob.hide();
   dateSlider.hide();
   volumeToggle.hide();
   highDensityButton.hide();
@@ -121,7 +145,7 @@ void initialiseUI() {
 
 //Hides the start button and shows the other UI elements
 void toggleUI() {
-    volumeSlider.show();
+    volumeKnob.show();
     dateSlider.show();
     volumeToggle.show();
     highDensityButton.show();
@@ -141,10 +165,6 @@ void initialScreen() {
   
   //Adds introductory text
   textSize(24);
-  text(introBox, 800, 550);
-  text(introBox2, 830, 580);
-  text(introBox3, 830, 610);
-  text(creditsBox, 830, 1100);
 }
 
 //This is the main screen where the data is visualised.
@@ -153,7 +173,10 @@ void initialScreen() {
 void screenStart() {
   fill(#FF0A0A);
   if (!visDone) { 
-    background(floorPlanbg); 
+    background(floorPlanbg);
+    //cp5.begin(cp5.addBackground("abc"))
+    //.setColorBackground(#D8D8D8)
+    //.setSize(1700,200);
     toggleText(); 
     dataVis(date); 
   }
@@ -171,19 +194,28 @@ void toggleScreen() {
 
 //Shows label text next to buttons/sliders
 void toggleText() {
+
+  //background(slider);
+  fill(255);
   textSize(17);
-  text(toggleMusic, 100, 100);
-  text("Change Volume",1450,55);
-  text("Change Date Region",1450,125);
-  textSize(25);
-  text("Number of visitors: " + table.getInt(date, 1), 800, 200);
+  text(toggleMusic,190,150);
+  textSize(17);
+  text("Volume",90,150);
+  textSize(22);
+  text("Change Date Region",360,60);
+  textSize(22);
+  fill(0);
+  text("No. of visitors: " + table.getInt(date, 1), 850, 180);
+  fill(#FF0F0F);
+
+  //text(controlVolume, 300, -30, 200, 100);
 }
 
 //Displays circles on the screen depicting the amount of people on the level
 void dataVis(int day) {
   for (int people = 1; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
-    ellipse(random(191, 1486), random(469, 826), ellipseSize, ellipseSize);
+    ellipse(random(200, 1500), random(313, 686), ellipseSize, ellipseSize);
     println(table.getInt(day, 1));
   }
   println("done");
