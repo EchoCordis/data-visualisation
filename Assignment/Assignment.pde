@@ -1,14 +1,16 @@
-import controlP5.*;
 //This imported library is ued to create on screen GUIs such as the slider.
+import controlP5.*;
 //Minim is an audio library that uses the JavaSound API
 import ddf.minim.*;
 
 //UI Elements
-ControlP5 cp5;
-Slider volumeSlider;
-Slider dateSlider;
-Button startButton;
-Toggle volumeToggle;
+ControlP5 cp5;  //ControlP5 controller
+Slider volumeSlider;  //Volume slider
+Slider dateSlider;  //Date slider
+Button startButton;  //Start button
+Toggle volumeToggle;  //Volume toggle
+Button highDensityButton;  //Highest density button
+Button lowDensityButton;  //Lowest density button
 int date = 0;  //Used for the date slider
 
 PImage floorPlanbg;
@@ -32,12 +34,17 @@ String toggleMusic = "Audio On/Off";
 String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
 String introBox = "Welcome to the Building 11 people counter data visualiser!";
-String introBox2 = "In this application, we will simulate the entry of people into building 11, based on sensory data.";
+String introBox2 = "In this application, we will simulate the entry of people into Level 2 of Building 11, based on sensory data.";
+String introBox3 = "Made by: Abderraouf Abbou, Charlie Phong, Donavan Le, Yuhao Song";
 
 //Checks which is current screen - false = start screen, true = main screen
 boolean currentScreen = false;
 //Checks if the data visualisation for that day is done
 boolean visDone = false;
+
+//Boolean links to highest and lowest buttons
+boolean t = false;
+boolean l = false;
 
 // This is the main introduction screen. User must click to enter the
 // simulation of the data visualisation.
@@ -64,7 +71,7 @@ void setup() {
 
 //Initialises the different UI elements in the program
 void initialiseUI() {
-  //Makes a font to be used for the slider's labels
+  //Makes a font to be used for the buttons' and sliders' value labels
   ControlFont font = new ControlFont(createFont("Calibri", 20));
   
   //Adds a volume slider into the main screen
@@ -96,24 +103,34 @@ void initialiseUI() {
   //Adds a volume toggle to the main screen
   volumeToggle = cp5.addToggle("mute").setBroadcast(false)
                   .setValue(true)
-                  .setPosition(60,40)
+                  .setPosition(80,40)
                   .setSize(40,40)
                   .setBroadcast(true);
+                  
+  //Adds a button showing the day and month of the highest density of visitors
+  highDensityButton = cp5.addButton("HighestDensityDate").setBroadcast(false)
+                      .setValue(0)
+                      .setCaptionLabel("Highest Density Date")
+                      .setPosition(550,1000)
+                      .setSize(200,50)
+                      .setBroadcast(true);
+  highDensityButton.getCaptionLabel().setFont(font);
+ 
+  //Adds a button showing the day and month of the lowest density of visitors
+  lowDensityButton = cp5.addButton("LowestDensityDate").setBroadcast(false)
+                      .setValue(0)
+                      .setCaptionLabel("Lowest Density Date")
+                      .setPosition(900,1000)
+                      .setSize(200,50)
+                      .setBroadcast(true);
+  lowDensityButton.getCaptionLabel().setFont(font);
   
   //Hides the sliders and volume toggle to begin with
   volumeSlider.hide();
   dateSlider.hide();
   volumeToggle.hide();
-}
-
-//Toggles the screen between the start screen and the main visualisation screen
-void toggleScreen() {
-  if (currentScreen) {
-    screenStart();
-  }
-  else if (!currentScreen) {
-    initialScreen();
-  }
+  highDensityButton.hide();
+  lowDensityButton.hide();
 }
 
 //Hides the start button and shows the other UI elements
@@ -121,33 +138,39 @@ void toggleUI() {
     volumeSlider.show();
     dateSlider.show();
     volumeToggle.show();
+    highDensityButton.show();
+    lowDensityButton.show();
     startButton.hide();
 }
 
+//Draws the start screen
 void initialScreen() {
   // white background and text align center
-
   background(255);
   image(img,0,0);
   textAlign(CENTER, CENTER);
   fill(0);
+  //Adds introductory text
   textSize(24);
   text(introBox, 800, 600);
   text(introBox2, 830, 620);
+  text(introBox3, 830, 1100);
 }
 
 //This is the main screen where the data is visualised.
 //Introduce sliders to control the volumne and possible another slider to control
 //background contrast
-
 void screenStart() {
   //background(floorPlanbg);
-
-  toggleSliders();
-  if (!visDone) { background(floorPlanbg); dataVis(date); }
+  fill(#FF0A0A);
+  if (!visDone) { 
+    background(floorPlanbg); 
+    toggleText(); 
+    dataVis(date); 
+  }
   
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
-  //Try to use the Coordiantes below
+  //Try to use the Coordinates below
   //X = random(210,1500);
   //Y = random(439, 854);
   s = createShape();
@@ -162,38 +185,69 @@ void screenStart() {
   shape(s,0,0);
 }
 
-void toggleSliders() {
+//Toggles the screen between the start screen and the main visualisation screen
+void toggleScreen() {
+  if (currentScreen) {
+    screenStart();
+  }
+  else if (!currentScreen) {
+    initialScreen();
+  }
+}
+
+//Shows label text next to buttons/sliders
+void toggleText() {
   //background(slider);
   //fill(0, 76, 255);
   textSize(17);
   text(toggleMusic, 100, 100);
   text("Change Volume",1450,55);
   text("Change Date Region",1450,125);
+  textSize(25);
+  text("Number of visitors: " + table.getInt(date, 1), 800, 200);
 
   //text(controlVolume, 300, -30, 200, 100);
-  audioplayer.setGain(volume);
-  
 }
 
 //Displays circles on the screen depicting the amount of people on the level
 void dataVis(int day) {
   
-  for (int people = 0; people <= table.getInt(day, 1); people++) {
+  for (int people = 1; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
-    ellipse(random(220,1500), random(459, 850), ellipseSize, ellipseSize);
+    ellipse(random(191, 1486), random(469, 826), ellipseSize, ellipseSize);
     println(table.getInt(day, 1));
   }
   println("done");
   visDone = true;
 }
 
-//Function used to check the position of your mouse cursor when pressed down.
-void mousePressed() {  
-  ellipse( mouseX, mouseY, 2, 2 );
-  fill(#FF0A0A);
-  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
-  //println( "x: " + mouseX + " y: " + mouseY);]
+//Control visibility of highest density date
+public void HighestDensityDate()
+  {
+    println("23 September");
+    if(!t){
+      t = true;
+    }else{
+      t = false;}
+  }
+ 
+//Control visibility of Lowest density date
+public void LowestDensityDate()
+{
+  println("6 June");
+  if(!l){
+    l=true;
+  }else{
+    l=false;}
 }
+
+//Function used to check the position of your mouse cursor when pressed down.
+//void mousePressed() {  
+//  ellipse( mouseX, mouseY, 2, 2 );
+//  fill(#FF0A0A);
+//  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
+//  //println( "x: " + mouseX + " y: " + mouseY);]
+//}
 
 void draw() {
   //strokeWeight(3);
@@ -203,7 +257,19 @@ void draw() {
   
   //Checks if we are in the title screen or the main visualisation screen.
   toggleScreen();
+  //Changes volume of BG music depending on the volume slider's value
+  audioplayer.setGain(volume);
   
+  //print the highest density date
+  if(t){
+    text("23 September", 650,1100);
+  }
+ 
+  //print the Lowest density date
+  if(l){
+    text("6 June",  1000, 1100);
+  }
+
   // loop through the csv file and save to variables.
   //while (row < table.getRowCount()) {
   //  int people = table.getInt(row, 1);
@@ -230,15 +296,14 @@ void draw() {
   //}
 }
 
-//Event controller for the UI
+//Event controller for the UI elements
 void controlEvent(ControlEvent event){
   //Date slider controls
   if (event.isController()) {
+    //Changes value label of the date slider when it is moved
     if (event.getController().getName() == "date"){
       cp5.getController("date").setValueLabel(table.getString(date, 0));
-       
       visDone = false;
-      
       //println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
     }
     //Start button controls
