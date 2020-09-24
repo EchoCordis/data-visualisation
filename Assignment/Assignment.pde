@@ -54,7 +54,7 @@ void setup() {
   size(1700, 1193);
   img = loadImage("banner.png");
   floorPlanbg = loadImage("data/02RI.jpg");
-  table = loadTable("people.csv", "header");
+  table = loadTable("PC0214.csv", "header");
   //background(floorPlanbg);
   pg = createGraphics(1600, 1122);  
   // allow audio API to be used here
@@ -82,14 +82,15 @@ void initialiseUI() {
   dateSlider = cp5.addSlider("date").setBroadcast(false)
               //Max value is number of rows - 1 from the csv file (not including the headers)
               //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
-              .setRange(0, 13409)  
+              .setRange(0, 13390)  
               .setPosition(300, 100)  //Sets position of the slider
               .setSize(1000, 50)  //Sets slider's size
               .setSliderMode(Slider.FLEXIBLE)
               .setBroadcast(true);
   dateSlider.getValueLabel().setFont(font);
   //Initalises text of the date slider
-  cp5.getController("date").setValueLabel(table.getString(date, 0));
+  String[] tempString = table.getString(date, 0).split(" |,");
+  cp5.getController("date").setValueLabel(tempString[0] + " " + tempString[1]);
   
   //Adds a start button to the start screen
   startButton = cp5.addButton("begin").setBroadcast(false)
@@ -204,18 +205,19 @@ void toggleText() {
   text("Change Volume",1450,55);
   text("Change Date Region",1450,125);
   textSize(25);
-  text("Number of visitors: " + table.getInt(date, 1), 800, 200);
+  String[] tempString = table.getString(date, 0).split(" |,");
+  text("Number of visitors: " + tempString[2], 800, 200);
 
   //text(controlVolume, 300, -30, 200, 100);
 }
 
 //Displays circles on the screen depicting the amount of people on the level
 void dataVis(int day) {
-  
-  for (int people = 1; people <= table.getInt(day, 1); people++) {
+  String[] tempString = table.getString(date, 0).split(" |,");
+  for (int people = 1; people <= Integer.parseInt(tempString[2]); people++) {
     float ellipseSize = random(5,10);
     ellipse(random(191, 1486), random(469, 826), ellipseSize, ellipseSize);
-    println(table.getInt(day, 1));
+    println(tempString[2]);
   }
   println("done");
   visDone = true;
@@ -302,9 +304,9 @@ void controlEvent(ControlEvent event){
   if (event.isController()) {
     //Changes value label of the date slider when it is moved
     if (event.getController().getName() == "date"){
-      cp5.getController("date").setValueLabel(table.getString(date, 0));
+      String[] tempString = table.getString(date, 0).split(" |,");
+      cp5.getController("date").setValueLabel(tempString[0] + " " + tempString[1]);
       visDone = false;
-      //println("Slider moved: " + table.getString(date, 0) + " " + table.getInt(date, 1));
     }
     //Start button controls
     //Disables the title screen and enables the main visualisation screen
