@@ -34,7 +34,7 @@ String toggleMusic = "Audio On/Off";
 String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
 String introBox = "Welcome to the Building 11 people counter data visualiser!";
-String introBox2 = "In this application, we will simulate the entry of people into building 11, based on sensory data.";
+String introBox2 = "In this application, we will simulate the entry of people into Level 2 of Building 11, based on sensory data.";
 String introBox3 = "Made by: Abderraouf Abbou, Charlie Phong, Donavan Le, Yuhao Song";
 
 //Checks which is current screen - false = start screen, true = main screen
