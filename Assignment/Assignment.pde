@@ -35,6 +35,7 @@ String contrastBG = "Contrast of Background";
 String controlVolume = "Control Volume";
 String introBox = "Welcome to the Building 11 people counter data visualiser!";
 String introBox2 = "In this application, we will simulate the entry of people into building 11, based on sensory data.";
+String introBox3 = "Made by: Abderraouf Abbou, Charlie Phong, Donavan Le, Yuhao Song";
 
 //Checks which is current screen - false = start screen, true = main screen
 boolean currentScreen = false;
@@ -154,6 +155,7 @@ void initialScreen() {
   textSize(24);
   text(introBox, 800, 600);
   text(introBox2, 830, 620);
+  text(introBox3, 830, 1100);
 }
 
 //This is the main screen where the data is visualised.
@@ -162,9 +164,12 @@ void initialScreen() {
 
 void screenStart() {
   //background(floorPlanbg);
-
-  toggleSliders();
-  if (!visDone) { background(floorPlanbg); dataVis(date); }
+  
+  if (!visDone) { 
+    background(floorPlanbg); 
+    toggleSliders(); 
+    dataVis(date); 
+  }
   
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
   //Try to use the Coordiantes below
@@ -200,6 +205,8 @@ void toggleSliders() {
   text(toggleMusic, 100, 100);
   text("Change Volume",1450,55);
   text("Change Date Region",1450,125);
+  textSize(25);
+  text("Number of visitors: " + table.getInt(date, 1), 800, 200);
 
   //text(controlVolume, 300, -30, 200, 100);
   audioplayer.setGain(volume);
@@ -211,7 +218,7 @@ void dataVis(int day) {
   
   for (int people = 0; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
-    ellipse(random(191, 1486), random(466, 826), ellipseSize, ellipseSize);
+    ellipse(random(191, 1486), random(469, 826), ellipseSize, ellipseSize);
     println(table.getInt(day, 1));
   }
   println("done");
