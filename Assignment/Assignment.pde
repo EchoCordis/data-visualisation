@@ -110,7 +110,6 @@ void initialiseUI() {
   //Adds a button showing the day and month of the highest density of visitors
   highDensityButton = cp5.addButton("HighestDensityDate").setBroadcast(false)
                       .setValue(0)
-                      .setColorBackground(255)
                       .setCaptionLabel("Highest Density Date")
                       .setPosition(550,1000)
                       .setSize(200,50)
@@ -120,7 +119,6 @@ void initialiseUI() {
   //Adds a button showing the day and month of the lowest density of visitors
   lowDensityButton = cp5.addButton("LowestDensityDate").setBroadcast(false)
                       .setValue(0)
-                      .setColorBackground(255)
                       .setCaptionLabel("Lowest Density Date")
                       .setPosition(900,1000)
                       .setSize(200,50)
@@ -152,6 +150,7 @@ void initialScreen() {
   image(img,0,0);
   textAlign(CENTER, CENTER);
   fill(0);
+  //Adds introductory text
   textSize(24);
   text(introBox, 800, 600);
   text(introBox2, 830, 620);
@@ -161,18 +160,17 @@ void initialScreen() {
 //This is the main screen where the data is visualised.
 //Introduce sliders to control the volumne and possible another slider to control
 //background contrast
-
 void screenStart() {
   //background(floorPlanbg);
-  
+  fill(#FF0A0A);
   if (!visDone) { 
     background(floorPlanbg); 
-    toggleSliders(); 
+    toggleText(); 
     dataVis(date); 
   }
   
   //Creates the same shape of the floor plan. This will contain all of the plotted data points.
-  //Try to use the Coordiantes below
+  //Try to use the Coordinates below
   //X = random(210,1500);
   //Y = random(439, 854);
   s = createShape();
@@ -198,7 +196,7 @@ void toggleScreen() {
 }
 
 //Shows label text next to buttons/sliders
-void toggleSliders() {
+void toggleText() {
   //background(slider);
   //fill(0, 76, 255);
   textSize(17);
@@ -209,8 +207,6 @@ void toggleSliders() {
   text("Number of visitors: " + table.getInt(date, 1), 800, 200);
 
   //text(controlVolume, 300, -30, 200, 100);
-  audioplayer.setGain(volume);
-  
 }
 
 //Displays circles on the screen depicting the amount of people on the level
@@ -246,12 +242,12 @@ public void LowestDensityDate()
 }
 
 //Function used to check the position of your mouse cursor when pressed down.
-void mousePressed() {  
-  ellipse( mouseX, mouseY, 2, 2 );
-  fill(#FF0A0A);
-  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
-  //println( "x: " + mouseX + " y: " + mouseY);]
-}
+//void mousePressed() {  
+//  ellipse( mouseX, mouseY, 2, 2 );
+//  fill(#FF0A0A);
+//  text( "x: " + mouseX + " y: " + mouseY, mouseX + 2, mouseY );
+//  //println( "x: " + mouseX + " y: " + mouseY);]
+//}
 
 void draw() {
   //strokeWeight(3);
@@ -261,6 +257,8 @@ void draw() {
   
   //Checks if we are in the title screen or the main visualisation screen.
   toggleScreen();
+  //Changes volume of BG music depending on the volume slider's value
+  audioplayer.setGain(volume);
   
   //print the highest density date
   if(t){
@@ -302,6 +300,7 @@ void draw() {
 void controlEvent(ControlEvent event){
   //Date slider controls
   if (event.isController()) {
+    //Changes value label of the date slider when it is moved
     if (event.getController().getName() == "date"){
       cp5.getController("date").setValueLabel(table.getString(date, 0));
       visDone = false;
