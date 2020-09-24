@@ -50,8 +50,8 @@ boolean l = false;
 
 void setup() {
   frameRate(240);
-  size(1700, 823);
-  img = loadImage("banner1.png");
+  size(1700, 863);
+  img = loadImage("banner2.png");
   floorPlanbg = loadImage("data/02R2.jpg");
   table = loadTable("people.csv", "header");
   //background(floorPlanbg);
@@ -103,7 +103,7 @@ void initialiseUI() {
   
   //Adds a start button to the start screen
   startButton = cp5.addButton("begin").setBroadcast(false)
-                .setPosition(750, 560)
+                .setPosition(750, 610)
                 .setColorForeground(#AFAFAF)
                 .setColorBackground(0)
                 .setColorActive(0xffFFFFFF)
