@@ -84,15 +84,14 @@ void initialiseUI() {
   dateSlider = cp5.addSlider("date").setBroadcast(false)
               //Max value is number of rows - 1 from the csv file (not including the headers)
               //Any higher and there will be an indexoutofbounds error. Currently it still gets the final row of the csv file
-              .setRange(0, 13390)  
+              .setRange(0, 25632)  
               .setPosition(300, 100)  //Sets position of the slider
               .setSize(1000, 50)  //Sets slider's size
               .setSliderMode(Slider.FLEXIBLE)
               .setBroadcast(true);
   dateSlider.getValueLabel().setFont(font);
   //Initalises text of the date slider
-  String[] tempString = table.getString(date, 0).split(" |,");
-  cp5.getController("date").setValueLabel(tempString[0] + " " + tempString[1]);
+  cp5.getController("date").setValueLabel(table.getString(date, 0));
   
   //Adds a start button to the start screen
   startButton = cp5.addButton("begin").setBroadcast(false)
@@ -114,7 +113,7 @@ void initialiseUI() {
   highDensityButton = cp5.addButton("HighestDensityDate").setBroadcast(false)
                       .setValue(0)
                       .setCaptionLabel("Highest Density Date")
-                      .setPosition(550,1000)
+                      .setPosition(500,1000)
                       .setSize(200,50)
                       .setBroadcast(true);
   highDensityButton.getCaptionLabel().setFont(font);
@@ -207,19 +206,18 @@ void toggleText() {
   text("Change Volume",1450,55);
   text("Change Date Region",1450,125);
   textSize(25);
-  String[] tempString = table.getString(date, 0).split(" |,");
-  text("Number of visitors: " + tempString[2], 800, 200);
+  //String[] tempString = table.getString(date, 0).split(" |,");
+  text("Number of visitors: " + table.getInt(date, 1), 800, 200);
 
   //text(controlVolume, 300, -30, 200, 100);
 }
 
 //Displays circles on the screen depicting the amount of people on the level
 void dataVis(int day) {
-  String[] tempString = table.getString(day, 0).split(" |,");
-  for (int people = 1; people <= Integer.parseInt(tempString[2]); people++) {
+  for (int people = 1; people <= table.getInt(day, 1); people++) {
     float ellipseSize = random(5,10);
     ellipse(random(191, 1486), random(469, 826), ellipseSize, ellipseSize);
-    println(tempString[2]);
+    println(table.getInt(day, 1));
   }
   println("done");
   visDone = true;
@@ -228,7 +226,7 @@ void dataVis(int day) {
 //Control visibility of highest density date
 public void HighestDensityDate()
   {
-    println("23 September");
+    println("03 March 2020 at 9:30am - 142");
     if(!t){
       t = true;
     }else{
@@ -266,7 +264,8 @@ void draw() {
   
   //print the highest density date
   if(t){
-    text("23 September", 650,1100);
+    text("03 March 2020 at 9:30am", 600,1100);
+    text("142 Visitors", 600,1150);
   }
  
   //print the Lowest density date
@@ -306,8 +305,7 @@ void controlEvent(ControlEvent event){
   if (event.isController()) {
     //Changes value label of the date slider when it is moved
     if (event.getController().getName() == "date"){
-      String[] tempString = table.getString(date, 0).split(" |,");
-      cp5.getController("date").setValueLabel(tempString[0] + " " + tempString[1]);
+      cp5.getController("date").setValueLabel(table.getString(date, 0));
       visDone = false;
     }
     //Start button controls
