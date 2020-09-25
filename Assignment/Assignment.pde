@@ -57,7 +57,7 @@ void setup() {
 //Initialises the different UI elements in the program
 void initialiseUI() {
   //Makes a font to be used for the buttons' and sliders' value labels
-  ControlFont font = new ControlFont(createFont("Poppins", 20));
+  ControlFont font = new ControlFont(createFont("calibri", 20));
   
   //Adds a volume slider into the main screen
   volumeKnob = cp5.addKnob("volume")
