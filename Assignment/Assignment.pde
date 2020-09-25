@@ -4,14 +4,13 @@ import controlP5.*;
 import ddf.minim.*;
 
 //UI Elements
-ControlP5 cp5;  //ControlP5 controller
-Slider volumeSlider;  //Volume slider
-Slider dateSlider;  //Date slider
-Knob volumeKnob;
+ControlP5 cp5;  //ControlP5 controller  - for UI elements
+Slider dateSlider;  //Date control slider
+Knob volumeKnob;  //Volume control knob
 Button startButton;  //Start button
 Toggle volumeToggle;  //Volume toggle
 Button highDensityButton;  //Highest density button
-Button lowDensityButton;  //Lowest density button
+Button onlineLButton;  //Online learning date button
 int date = 0;  //Used for the date slider
 
 PImage floorPlanbg;  //Image of the floorplan
@@ -19,14 +18,12 @@ PImage img;  //Image of the start screen's banner
 int volume = -10;  //Used for the volume slider
 Table table;  //Table storing contents of the CSV file
 
-Minim minim;
-AudioPlayer audioplayer;
-boolean playAudio = true;
+Minim minim;  //Minim controller - for background music
+AudioPlayer audioplayer;  //Stores the song used for background music
+boolean playAudio = true;  //Determines if the music should be playing
 
-PGraphics pg;
+//Label for volume toggle
 String toggleMusic = "Mute";
-String contrastBG = "Contrast of Background";
-String controlVolume = "Control Volume";
 
 //Checks which is current screen - false = start screen, true = main screen
 boolean currentScreen = false;
@@ -37,8 +34,10 @@ boolean visDone = false;
 void setup() {
   frameRate(240);
   size(1700, 863);
+  //Loads in images for the start screen and main visualisation screen
   img = loadImage("banner2.png");
   floorPlanbg = loadImage("data/02R2.jpg");
+  //Loads in the CSV file of data
   table = loadTable("PC0214.csv", "header");
   //background(floorPlanbg);
 
@@ -117,30 +116,30 @@ void initialiseUI() {
                       .setColorBackground(0)
                       .setColorActive(0xffFFFFFF)
                       .setValue(0)
-                      .setCaptionLabel("Highest Density Date")
-                      .setPosition(500,1000)
+                      .setCaptionLabel("Most Visitors")
+                      .setPosition(1250,25)
                       .setSize(200,50)
                       .setBroadcast(true);
   highDensityButton.getCaptionLabel().setFont(font);
- 
-  //Adds a button showing the day and month of the lowest density of visitors
-  lowDensityButton = cp5.addButton("LowestDensityDate").setBroadcast(false)
-                      .setColorForeground(#AFAFAF)
-                      .setColorBackground(0)
-                      .setColorActive(0xffFFFFFF)
-                      .setValue(0)
-                      .setCaptionLabel("Lowest Density Date")
-                      .setPosition(900,1000)
-                      .setSize(200,50)
-                      .setBroadcast(true);
-  lowDensityButton.getCaptionLabel().setFont(font);
+  
+  //Adds a button showing the day and month online learning started
+  onlineLButton = cp5.addButton("onlineLearning").setBroadcast(false)
+                    .setColorForeground(#AFAFAF)
+                    .setColorBackground(0)
+                    .setColorActive(0xffFFFFFF)
+                    .setValue(0)
+                    .setCaptionLabel("Online Learning Starts")
+                    .setPosition(925,25)
+                    .setSize(300,50)
+                    .setBroadcast(true);
+  onlineLButton.getCaptionLabel().setFont(font);
   
   //Hides the sliders and volume toggle to begin with
   volumeKnob.hide();
   dateSlider.hide();
   volumeToggle.hide();
   highDensityButton.hide();
-  lowDensityButton.hide();
+  onlineLButton.hide();
 }
 
 //Hides the start button and shows the other UI elements
@@ -149,7 +148,7 @@ void toggleUI() {
     dateSlider.show();
     volumeToggle.show();
     highDensityButton.show();
-    lowDensityButton.show();
+    onlineLButton.show();
     startButton.hide();
 }
 
@@ -163,7 +162,7 @@ void initialScreen() {
   textAlign(CENTER, CENTER);
   fill(0);
   
-  //Adds introductory text
+  //Sets font size
   textSize(24);
 }
 
@@ -174,9 +173,6 @@ void screenStart() {
   fill(#FF0A0A);
   if (!visDone) { 
     background(floorPlanbg);
-    //cp5.begin(cp5.addBackground("abc"))
-    //.setColorBackground(#D8D8D8)
-    //.setSize(1700,200);
     toggleText(); 
     dataVis(date); 
   }
@@ -194,8 +190,6 @@ void toggleScreen() {
 
 //Shows label text next to buttons/sliders
 void toggleText() {
-
-  //background(slider);
   fill(255);
   textSize(17);
   text(toggleMusic,190,150);
@@ -206,38 +200,37 @@ void toggleText() {
   textSize(22);
   fill(0);
   text("No. of visitors: " + table.getInt(date, 1), 850, 180);
-  fill(#FF0F0F);
-
-  //text(controlVolume, 300, -30, 200, 100);
 }
 
 //Displays circles on the screen depicting the amount of people on the level
 void dataVis(int day) {
-  for (int people = 1; people <= table.getInt(day, 1); people++) {
-    float ellipseSize = random(5,10);
-    ellipse(random(220, 1530), random(343, 726), ellipseSize, ellipseSize);
-    println(table.getInt(day, 1));
+  if (day >= 18368) {
+    fill(#FF0F0F);
   }
-  println("done");
+  else {
+    fill(#358FFA);
+  }
+  for (int people = 1; people <= table.getInt(day, 1); people++) {
+    float ellipseSize = random(6,10);
+    ellipse(random(220, 1520), random(343, 726), ellipseSize, ellipseSize);
+    //println(table.getInt(day, 1));
+  }
+  //println("done");
   visDone = true;
 }
 
-//Control visibility of highest density date
+//Sets current date to the date with highest density of visitors
 public void HighestDensityDate()
 {
-  println("21 March 2019 at 9:00am - 142");
-  //Display the highest density date
-  text("21 March 2019 at 9:00am", 600,1100);
-  text("284 Visitors", 600,1150);
-
+  println("21 March 2019 at 9:00am - 284");
+  date = 3792;
+  cp5.getController("date").setValue(date);
 }
- 
-//Control visibility of Lowest density date
-public void LowestDensityDate()
-{
-  println("6 June");
-  //Display the lowest density date
-  text("6 June",  1000, 1100);
+
+//Sets current date to the date that online learning started at UTS
+void onlineLearning() {
+  date = 18386;
+  cp5.getController("date").setValue(date);
 }
 
 void draw() {
